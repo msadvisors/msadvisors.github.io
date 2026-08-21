@@ -59,11 +59,13 @@
     </script>
     <title>MS Advisors | M&amp;A and Corporate Advisory Services</title>
     <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chosen Palette: Warm Neutrals & Deep Blue -->
     <!-- Application Structure Plan: A single-page, top-to-bottom narrative that moves from the value proposition (Home, with a stat strip) to the firm's story and founder (About), to proof of execution (Transactions: concluded deal announcements plus a client testimonial), then service detail (Services), differentiators (Why Us), the founder's prior-career evidence (Track Record), and a transaction-oriented call-to-action (Contact). Transactions sits high in the page because closed mandates are the strongest credibility signal for an advisory firm. The key interaction remains the tabbed Services section, now carrying sub-item detail per service. -->
     <!-- Visualization & Content Choices: The source material is textual, so the focus is on clear typography, structured layouts (flexbox/grid), and a single point of interaction to enhance user engagement without overwhelming them. Report Info: Service descriptions -> Goal: Organize/Inform -> Viz/Presentation Method: Interactive vertical tabs -> Interaction: User clicks a service to reveal its description, with active states indicating the current selection -> Justification: This breaks down a dense list of services into user-controlled, digestible chunks, improving readability and engagement over a static list. Library/Method: Vanilla JavaScript for tab functionality. -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         @font-face {
             font-family: 'Lora';
@@ -75,14 +77,26 @@
         .font-lora {
             font-family: 'Lora', serif;
         }
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+        /* Eyebrow labels: one scale everywhere, colour varies by background. */
+        .eyebrow {
+            font-size: 0.75rem;
+            line-height: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+        }
         .active-service {
             background-color: #1e3a8a;
             color: #ffffff;
         }
+        /* Ghost inactive state so a single tab reads as selected, rather than
+           five equally-weighted buttons. */
         .inactive-service {
-            background-color: #e5e7eb;
+            background-color: transparent;
             color: #374151;
+        }
+        .inactive-service:hover {
+            background-color: #ffffff;
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
         }
     </style>
 </head>
@@ -104,36 +118,36 @@
                     <a href="#contact" class="text-gray-600 hover:text-[#1e3a8a] transition duration-300">Contact</a>
                 </nav>
                 <div class="md:hidden">
-                    <button id="mobile-menu-button" class="text-gray-600 hover:text-[#1e3a8a] focus:outline-none">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    <button id="mobile-menu-button" class="text-gray-600 hover:text-[#1e3a8a] rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1e3a8a] focus-visible:ring-offset-2" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobile-menu">
+                        <svg aria-hidden="true" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
                     </button>
                 </div>
             </div>
         </div>
         <!-- Mobile Menu -->
         <div id="mobile-menu" class="md:hidden hidden bg-[#FDFBF8] py-4">
-            <a href="#about" class="block text-center py-2 text-gray-600 hover:bg-gray-200">About</a>
-            <a href="#transactions" class="block text-center py-2 text-gray-600 hover:bg-gray-200">Transactions</a>
-            <a href="#services" class="block text-center py-2 text-gray-600 hover:bg-gray-200">Services</a>
-            <a href="#why-us" class="block text-center py-2 text-gray-600 hover:bg-gray-200">Why Us</a>
-            <a href="#contact" class="block text-center py-2 text-gray-600 hover:bg-gray-200">Contact</a>
+            <a href="#about" class="block text-center py-2 text-gray-600 hover:bg-gray-200 active:bg-gray-200">About</a>
+            <a href="#transactions" class="block text-center py-2 text-gray-600 hover:bg-gray-200 active:bg-gray-200">Transactions</a>
+            <a href="#services" class="block text-center py-2 text-gray-600 hover:bg-gray-200 active:bg-gray-200">Services</a>
+            <a href="#why-us" class="block text-center py-2 text-gray-600 hover:bg-gray-200 active:bg-gray-200">Why Us</a>
+            <a href="#contact" class="block text-center py-2 text-gray-600 hover:bg-gray-200 active:bg-gray-200">Contact</a>
         </div>
     </header>
 
     <main class="container mx-auto px-4 sm:px-6 lg:px-8">
         
         <!-- Section 1: Home -->
-        <section id="home" class="relative min-h-[calc(100vh-80px)] flex items-center justify-center text-white overflow-hidden py-20" style="background-image: url('assets/accordian_images/img1.jpg'); background-size: cover; background-position: center;">
+        <section id="home" class="relative md:min-h-[calc(100vh-80px)] flex items-center justify-center text-white overflow-hidden py-16 md:py-20" style="background-image: url('assets/accordian_images/img1.jpg'); background-size: cover; background-position: center;">
             <div class="absolute top-0 left-0 w-full h-full bg-black opacity-50 z-10"></div>
             <div class="relative z-20 text-center mx-auto max-w-4xl px-2">
-                <p class="text-xs md:text-sm uppercase tracking-[0.2em] text-blue-200 mb-5">Corporate Advisory &amp; M&amp;A</p>
-                <h1 class="text-4xl md:text-6xl font-bold tracking-tight">Institutional-quality advisory for promoter-led businesses</h1>
-                <p class="mt-6 text-lg md:text-xl text-gray-100">MS Advisors structures and closes M&amp;A, financial structuring and growth-capital mandates across pharmaceuticals, specialty chemicals and allied sectors.</p>
+                <p class="eyebrow text-blue-200 mb-5">Corporate Advisory &amp; M&amp;A</p>
+                <h1 class="text-3xl sm:text-4xl md:text-6xl font-bold tracking-tight">Institutional-quality advisory for promoter-led businesses</h1>
+                <p class="mt-5 text-base sm:text-lg md:text-xl text-gray-100">MS Advisors structures and closes M&amp;A, financial structuring and growth-capital mandates across pharmaceuticals, specialty chemicals and allied sectors.</p>
                 <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
                     <a href="#transactions" class="bg-[#1e3a8a] text-white font-semibold px-8 py-4 rounded-lg shadow-lg hover:bg-blue-700 transition duration-300">Recent Transactions</a>
                     <a href="#contact" class="border border-white/70 text-white font-semibold px-8 py-4 rounded-lg hover:bg-white hover:text-[#1e3a8a] transition duration-300">Start a Conversation</a>
                 </div>
-                <div class="mt-14 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 border-t border-white/20 pt-8">
+                <div class="mt-10 md:mt-14 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 border-t border-white/20 pt-8">
                     <div>
                         <p class="text-2xl md:text-3xl font-bold">31 Years</p>
                         <p class="mt-1 text-xs md:text-sm text-blue-200">Advisory and leadership experience</p>
@@ -155,7 +169,7 @@
         </section>
 
         <!-- Section 2: About Us -->
-        <section id="about" class="py-24">
+        <section id="about" class="pt-24 pb-16">
             <div class="text-center mb-16">
                 <h2 class="text-3xl md:text-4xl font-bold">About MS Advisors</h2>
                 <p class="mt-4 text-gray-600 max-w-3xl mx-auto">A boutique corporate advisory firm committed to leading companies to profitable growth.</p>
@@ -163,20 +177,20 @@
             <div class="grid md:grid-cols-5 gap-12 items-start">
                 <div class="md:col-span-3">
                     <h3 class="text-2xl font-semibold mb-4">Our Story</h3>
-                    <p class="text-gray-600 mb-6">MS Advisors is a boutique corporate advisory firm founded in 2025 by Mitanshu Shah, built as a one-stop consulting practice for running a business efficiently. Since founding, the firm has advised on two M&amp;A transactions, including the divestment of a controlling stake in a listed specialty fine chemicals company, and holds active mandates across pharmaceuticals, specialty fine chemicals, utilities and allied sectors. We work to help clients achieve breakthroughs in growth and profitability, develop a performance culture, and translate their vision into a working road map, partnering and handholding rather than simply advising.</p>
+                    <p class="text-gray-600 mb-6 max-w-prose">MS Advisors is a boutique corporate advisory firm founded in 2025 by Mitanshu Shah, built as a one-stop consulting practice for running a business efficiently. Since founding, the firm has advised on two M&amp;A transactions, including the divestment of a controlling stake in a listed specialty fine chemicals company, and holds active mandates across pharmaceuticals, specialty fine chemicals, utilities and allied sectors. We work to help clients achieve breakthroughs in growth and profitability, develop a performance culture, and translate their vision into a working road map, partnering and handholding rather than simply advising.</p>
                     <h3 class="text-2xl font-semibold mb-4">Our Vision</h3>
-                    <p class="text-gray-600">Our vision is to support clients to achieve breakthroughs in business growth and profitability, develop a performance culture, and create a strategic plan that translates their vision into a road map.</p>
+                    <p class="text-gray-600 max-w-prose">Our vision is to support clients to achieve breakthroughs in business growth and profitability, develop a performance culture, and create a strategic plan that translates their vision into a road map.</p>
                 </div>
-                <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+                <div class="md:col-span-2 bg-white p-8 md:p-10 rounded-xl shadow-lg border border-gray-100">
                     <div class="text-center">
                         <img src="assets/Mitanshu.jpg" alt="Mitanshu Shah, Founder & CEO of MS Advisors" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-white shadow-md">
-                        <h4 class="text-xl font-bold">Mitanshu Shah</h4>
+                        <h3 class="text-xl font-bold">Mitanshu Shah</h3>
                         <p class="text-gray-500">Founder & CEO, CMA & PGDBM</p>
                     </div>
                     <p class="text-sm text-gray-600 mt-4 italic">"My consulting style is engaging and riveting. I partner and handhold with clients, rather than just advising. I roll up my sleeves and work with their teams to deliver solutions that work and are enduring."</p>
                     <p class="text-sm text-gray-700 mt-4 font-semibold">31 years of experience spanning Healthcare, Chemical, Real Estate, Engineering, and Financial Services.</p>
                     <div class="mt-6 pt-6 border-t border-gray-100">
-                        <p class="text-xs uppercase tracking-widest text-gray-400 mb-1">Prior Experience</p>
+                        <p class="eyebrow text-[#1e3a8a] mb-2">Prior Experience</p>
                         <p class="text-sm text-gray-600 mb-4">31 years across finance, strategy and M&amp;A in leading Indian and multinational organisations.</p>
                         <ul class="space-y-3">
                             <li>
@@ -208,7 +222,7 @@
         <!-- Section 3: Transactions -->
         <section id="transactions" class="py-24">
             <div class="text-center mb-16">
-                <p class="text-xs uppercase tracking-[0.2em] text-[#1e3a8a] mb-3">Deal Announcements</p>
+                <p class="eyebrow text-[#1e3a8a] mb-3">Deal Announcements</p>
                 <h2 class="text-3xl md:text-4xl font-bold">Recent Transactions</h2>
                 <p class="mt-4 text-gray-600 max-w-3xl mx-auto">A record of mandates concluded for promoters and boards across specialty chemicals and allied sectors.</p>
             </div>
@@ -216,27 +230,27 @@
             <!-- Deal 1: Kronox / Indo Borax -->
             <article class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden mb-10">
                 <div class="grid lg:grid-cols-5">
-                    <div class="lg:col-span-3 p-8 md:p-12">
-                        <p class="text-xs uppercase tracking-[0.2em] text-[#1e3a8a] mb-3">Change of Control &mdash; Listed to Listed</p>
+                    <div class="lg:col-span-3 p-8 md:p-12 order-last lg:order-first">
+                        <p class="eyebrow text-[#1e3a8a] mb-3">Change of Control &mdash; Listed to Listed</p>
                         <h3 class="text-2xl md:text-3xl font-bold leading-snug">Kronox Lab Sciences Limited <span class="text-gray-400 font-normal">/</span> Indo Borax &amp; Chemicals Limited</h3>
                         <p class="mt-4 text-gray-700 font-medium">MS Advisors, with CNK &amp; Associates LLP, acted as exclusive Strategic and M&amp;A Advisors to the promoters of Kronox Lab Sciences Limited.</p>
                         <p class="mt-2 text-sm text-gray-500">NSE: KRONOX | BSE: 544187 &nbsp;&rarr;&nbsp; NSE: INDOBORAX | BSE: 524342</p>
 
                         <div class="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-6 border-t border-gray-100 pt-6">
                             <div>
-                                <p class="text-xl font-bold text-[#1e3a8a]">64.26%</p>
+                                <p class="text-lg md:text-xl font-bold text-[#1e3a8a]">64.26%</p>
                                 <p class="mt-1 text-xs text-gray-500">Controlling stake divested</p>
                             </div>
                             <div>
-                                <p class="text-xl font-bold text-[#1e3a8a]">20 Aug 2026</p>
+                                <p class="text-lg md:text-xl font-bold text-[#1e3a8a]">20 Aug 2026</p>
                                 <p class="mt-1 text-xs text-gray-500">Agreement signed</p>
                             </div>
                             <div>
-                                <p class="text-xl font-bold text-[#1e3a8a]">9.95%</p>
+                                <p class="text-lg md:text-xl font-bold text-[#1e3a8a]">9.95%</p>
                                 <p class="mt-1 text-xs text-gray-500">Promoter stake retained</p>
                             </div>
                             <div>
-                                <p class="text-xl font-bold text-[#1e3a8a]">~185</p>
+                                <p class="text-lg md:text-xl font-bold text-[#1e3a8a]">~185</p>
                                 <p class="mt-1 text-xs text-gray-500">Products in Kronox&rsquo;s portfolio</p>
                             </div>
                         </div>
@@ -248,7 +262,7 @@
                             <footer class="mt-3 text-sm text-gray-500">Mitanshu Shah, Founder &amp; CEO</footer>
                         </blockquote>
                     </div>
-                    <div class="lg:col-span-2 bg-gray-50 flex items-center justify-center p-6 md:p-8">
+                    <div class="lg:col-span-2 bg-gray-50 flex items-center justify-center p-6 md:p-8 order-first lg:order-last">
                         <img src="assets/deals/kronox-indoborax-announcement.jpg" alt="Deal announcement: MS Advisors advised the promoters of Kronox Lab Sciences Limited on the divestment of a 64.26% controlling stake to Indo Borax &amp; Chemicals Limited" class="w-full max-w-md rounded-xl shadow-md" loading="lazy" width="1200" height="1200">
                     </div>
                 </div>
@@ -256,15 +270,15 @@
 
             <!-- Deal 2: Maksons Fine Chem -->
             <article class="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 md:p-12 mb-10">
-                <p class="text-xs uppercase tracking-[0.2em] text-[#1e3a8a] mb-3">Sell-Side M&amp;A</p>
+                <p class="eyebrow text-[#1e3a8a] mb-3">Sell-Side M&amp;A</p>
                 <h3 class="text-2xl md:text-3xl font-bold">Maksons Fine Chem Pvt Ltd</h3>
-                <p class="mt-4 text-gray-700 font-medium">MS Advisors acted as exclusive sell-side advisor, leading the mandate end to end from origination to closure.</p>
-                <p class="mt-6 text-gray-600 max-w-4xl">MS Advisors advised the promoters of Maksons Fine Chem Pvt Ltd, Ankleshwar, on its acquisition by a large India-based, PE-backed API platform with established interests in specialty fine chemicals and pharmaceuticals. The firm led origination, structuring, negotiations and closure. This was the first M&amp;A transaction closed under the MS Advisors banner, and set the template for the process discipline the firm now applies to every promoter mandate.</p>
+                <p class="mt-4 text-gray-700 font-medium max-w-3xl">MS Advisors acted as exclusive sell-side advisor, leading the mandate end to end from origination to closure.</p>
+                <p class="mt-6 text-gray-600 max-w-prose">MS Advisors advised the promoters of Maksons Fine Chem Pvt Ltd, Ankleshwar, on its acquisition by a large India-based, PE-backed API platform with established interests in specialty fine chemicals and pharmaceuticals. The firm led origination, structuring, negotiations and closure. This was the first M&amp;A transaction closed under the MS Advisors banner, and set the template for the process discipline the firm now applies to every promoter mandate.</p>
             </article>
 
             <!-- Client testimonial -->
             <figure class="bg-[#1e3a8a] text-white rounded-2xl p-8 md:p-12">
-                <p class="text-xs uppercase tracking-[0.2em] text-blue-200 mb-6">Client Testimonial</p>
+                <p class="eyebrow text-blue-200 mb-6">Client Testimonial</p>
                 <blockquote class="text-lg md:text-xl leading-relaxed italic max-w-4xl">
                     &ldquo;What stood out most was the speed and ease with which the entire process was navigated. A transaction of this nature, with its inherent complexities, was concluded in record time&hellip; Mitanshu Shah&rsquo;s involvement was, in a word, exemplary. His ability to deeply align with our perspective, understanding our priorities, our sensitivities, and our expectations while simultaneously driving the transaction forward with clarity and conviction, was remarkable&hellip; We would not hesitate to recommend them, without reservation, to any promoter considering a transaction of significance.&rdquo;
                 </blockquote>
@@ -282,16 +296,16 @@
                 <p class="mt-4 text-gray-600 max-w-3xl mx-auto">Five practice areas, each led end to end. Select a service to see how we work and what the mandate covers.</p>
             </div>
             <div class="flex flex-col md:flex-row gap-8 md:min-h-[440px]">
-                <div class="w-full md:w-1/3 flex flex-col space-y-2 bg-gray-50 rounded-lg p-8 h-full justify-center md:min-h-[400px]">
-                    <button data-service="finance" class="service-btn text-left p-4 rounded-lg transition duration-300 font-semibold active-service">Transformation / Business Finance</button>
-                    <button data-service="structuring" class="service-btn text-left p-4 rounded-lg transition duration-300 font-semibold inactive-service">Financial Structuring / M&amp;A</button>
-                    <button data-service="ir" class="service-btn text-left p-4 rounded-lg transition duration-300 font-semibold inactive-service">Investor Relations</button>
-                    <button data-service="partnering" class="service-btn text-left p-4 rounded-lg transition duration-300 font-semibold inactive-service">Strategic Partnering</button>
-                    <button data-service="treasury" class="service-btn text-left p-4 rounded-lg transition duration-300 font-semibold inactive-service">Treasury Management</button>
+                <div role="tablist" aria-label="Corporate advisory services" class="w-full md:w-1/3 flex flex-col space-y-2 bg-gray-50 rounded-lg p-8 h-full justify-center md:min-h-[400px]">
+                    <button data-service="finance" id="finance-tab" role="tab" aria-selected="true" aria-controls="finance-content" tabindex="0" class="service-btn text-left p-4 rounded-lg transition duration-300 font-semibold active-service">Transformation / Business Finance</button>
+                    <button data-service="structuring" id="structuring-tab" role="tab" aria-selected="false" aria-controls="structuring-content" tabindex="-1" class="service-btn text-left p-4 rounded-lg transition duration-300 font-semibold inactive-service">Financial Structuring / M&amp;A</button>
+                    <button data-service="ir" id="ir-tab" role="tab" aria-selected="false" aria-controls="ir-content" tabindex="-1" class="service-btn text-left p-4 rounded-lg transition duration-300 font-semibold inactive-service">Investor Relations</button>
+                    <button data-service="partnering" id="partnering-tab" role="tab" aria-selected="false" aria-controls="partnering-content" tabindex="-1" class="service-btn text-left p-4 rounded-lg transition duration-300 font-semibold inactive-service">Strategic Partnering</button>
+                    <button data-service="treasury" id="treasury-tab" role="tab" aria-selected="false" aria-controls="treasury-content" tabindex="-1" class="service-btn text-left p-4 rounded-lg transition duration-300 font-semibold inactive-service">Treasury Management</button>
                 </div>
                 <div class="w-full md:w-2/3 p-8 bg-gray-50 rounded-lg h-full flex items-start md:min-h-[400px]">
                     <div id="service-content" class="w-full">
-                            <div id="finance-content" class="service-panel">
+                            <div id="finance-content" role="tabpanel" aria-labelledby="finance-tab" tabindex="0" class="service-panel">
                             <h3 class="text-2xl font-bold mb-4">Transformation / Business Finance</h3>
                             <p class="text-gray-700">We help promoters build a business finance function that controls and lowers cost, brings agility and competitiveness, and instils the discipline of deciding on reliable data. The focus is on impactful dashboards, automation and transformational cost reduction, not incremental fixes.</p>
                             <ul class="mt-6 grid sm:grid-cols-2 gap-x-8 gap-y-4">
@@ -317,7 +331,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <div id="structuring-content" class="service-panel hidden">
+                        <div id="structuring-content" role="tabpanel" aria-labelledby="structuring-tab" tabindex="0" class="service-panel hidden">
                             <h3 class="text-2xl font-bold mb-4">Financial Structuring / M&amp;A</h3>
                             <p class="text-gray-700">We advise promoters and boards through the capital-raising and ownership decisions that define a company&rsquo;s next stage, from listing to acquisition to expansion financing. Each mandate is led end to end, from structuring through negotiation to close.</p>
                             <ul class="mt-6 grid sm:grid-cols-2 gap-x-8 gap-y-4">
@@ -343,7 +357,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <div id="ir-content" class="service-panel hidden">
+                        <div id="ir-content" role="tabpanel" aria-labelledby="ir-tab" tabindex="0" class="service-panel hidden">
                             <h3 class="text-2xl font-bold mb-4">Investor Relations</h3>
                             <p class="text-gray-700">We help listed companies strategise and operationalise their investor relations programme, benchmarked against best practice. The goal is a cap table built on quality institutional ownership and a communication cadence that investors trust.</p>
                             <ul class="mt-6 grid sm:grid-cols-2 gap-x-8 gap-y-4">
@@ -373,7 +387,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <div id="partnering-content" class="service-panel hidden">
+                        <div id="partnering-content" role="tabpanel" aria-labelledby="partnering-tab" tabindex="0" class="service-panel hidden">
                             <h3 class="text-2xl font-bold mb-4">Strategic Partnering with Promoters</h3>
                             <p class="text-gray-700">For promoters who need a senior finance partner without a full-time hire, we operate as a virtual CFO&rsquo;s office, handholding through projects, transactions and compliance so the founder can stay focused on the business.</p>
                             <ul class="mt-6 grid sm:grid-cols-2 gap-x-8 gap-y-4">
@@ -403,7 +417,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <div id="treasury-content" class="service-panel hidden">
+                        <div id="treasury-content" role="tabpanel" aria-labelledby="treasury-tab" tabindex="0" class="service-panel hidden">
                             <h3 class="text-2xl font-bold mb-4">Treasury Management / Growth Capital</h3>
                             <p class="text-gray-700">We support promoters and family offices in managing capital and risk with the same discipline applied to operating decisions. This spans wealth management, hedging and debt syndication.</p>
                             <ul class="mt-6 grid sm:grid-cols-2 gap-x-8 gap-y-4">
@@ -463,27 +477,27 @@
                 <p class="mt-4 text-gray-600 max-w-3xl mx-auto">Before founding MS Advisors, Mitanshu Shah spent 31 years building this experience in senior finance and leadership roles.</p>
             </div>
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-100">
+                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-100 hover:shadow-lg transition-shadow duration-300">
                     <h3 class="text-lg font-semibold mb-2">20x Sales Growth</h3>
                     <p class="text-gray-600 text-sm">Part of the leadership team that spearheaded profitable sales growth of 20x over 18 years at a previous organisation.</p>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-100">
+                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-100 hover:shadow-lg transition-shadow duration-300">
                     <h3 class="text-lg font-semibold mb-2">Public Market Fundraising</h3>
                     <p class="text-gray-600 text-sm">Raised equity through an IPO and subsequent QIP and preferential issues.</p>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-100">
+                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-100 hover:shadow-lg transition-shadow duration-300">
                     <h3 class="text-lg font-semibold mb-2">M&amp;A and JV Transactions</h3>
                     <p class="text-gray-600 text-sm">Led several M&amp;A, disinvestment and joint venture transactions, both onshore and offshore.</p>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-100">
+                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-100 hover:shadow-lg transition-shadow duration-300">
                     <h3 class="text-lg font-semibold mb-2">Capital Allocation Strategy</h3>
                     <p class="text-gray-600 text-sm">Planned and executed a capital allocation strategy that generated an industry-beating CAGR.</p>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-100">
+                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-100 hover:shadow-lg transition-shadow duration-300">
                     <h3 class="text-lg font-semibold mb-2">Institutional Investor Relationships</h3>
                     <p class="text-gray-600 text-sm">Built relationships across large MNC and private banks, PE funds and AMCs, and secured stock coverage from marquee funds and broking houses.</p>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-100">
+                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-100 hover:shadow-lg transition-shadow duration-300">
                     <h3 class="text-lg font-semibold mb-2">Risk and Treasury Systems</h3>
                     <p class="text-gray-600 text-sm">Built risk management matrices including the insurance portfolio, and implemented FX management tools so global treasury ran as a profit centre.</p>
                 </div>
@@ -492,16 +506,16 @@
         </section>
 
         <!-- Section 7: Contact Us -->
-        <section id="contact" class="py-24 bg-blue-900/95 text-white rounded-2xl mb-12">
+        <section id="contact" class="py-24 bg-[#1e3a8a] text-white rounded-2xl mb-12">
             <div class="text-center mb-12">
                 <h2 class="text-3xl md:text-4xl font-bold">Considering a transaction?</h2>
                 <p class="mt-4 text-blue-200 max-w-3xl mx-auto">If you are a promoter weighing a buy-side or sell-side transaction in pharmaceuticals, specialty fine chemicals, utilities or an allied sector, talk to us before you talk to a banker.</p>
             </div>
             <div class="max-w-2xl mx-auto">
                 <div class="space-y-4 text-center">
-                    <p class="inline-flex items-center"><svg class="w-5 h-5 mr-3 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg> (+91) 98240 33021</p>
-                    <p class="inline-flex items-center"><svg class="w-5 h-5 mr-3 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg> mitanshu@msadvisors.in</p>
-                    <p class="inline-flex items-start"><svg class="w-5 h-5 mr-3 text-blue-300 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg> Third Floor, The Nirat, 18 Windward Business Park, Behind Emerald One, Jetalpur Road, Vadodara, Gujarat 390007</p>
+                    <p class="inline-flex items-center"><svg aria-hidden="true" class="w-5 h-5 mr-3 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg> (+91) 98240 33021</p>
+                    <p class="inline-flex items-center"><svg aria-hidden="true" class="w-5 h-5 mr-3 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg> mitanshu@msadvisors.in</p>
+                    <p class="inline-flex items-start"><svg aria-hidden="true" class="w-5 h-5 mr-3 text-blue-300 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg> Third Floor, The Nirat, 18 Windward Business Park, Behind Emerald One, Jetalpur Road, Vadodara, Gujarat 390007</p>
                 </div>
             </div>
         </section>
@@ -520,37 +534,54 @@
             const mobileMenu = document.getElementById('mobile-menu');
 
             mobileMenuButton.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
+                const open = mobileMenu.classList.toggle('hidden') === false;
+                mobileMenuButton.setAttribute('aria-expanded', String(open));
             });
             
             document.querySelectorAll('#mobile-menu a').forEach(link => {
                 link.addEventListener('click', () => {
                     mobileMenu.classList.add('hidden');
+                    mobileMenuButton.setAttribute('aria-expanded', 'false');
                 });
             });
 
             const serviceBtns = document.querySelectorAll('.service-btn');
             const servicePanels = document.querySelectorAll('.service-panel');
 
-            serviceBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const service = btn.getAttribute('data-service');
-                    
-                    serviceBtns.forEach(b => {
-                        b.classList.remove('active-service');
-                        b.classList.add('inactive-service');
-                    });
-                    
-                    btn.classList.add('active-service');
-                    btn.classList.remove('inactive-service');
+            const selectService = (btn) => {
+                const service = btn.getAttribute('data-service');
 
-                    servicePanels.forEach(panel => {
-                        if (panel.id === `${service}-content`) {
-                            panel.classList.remove('hidden');
-                        } else {
-                            panel.classList.add('hidden');
-                        }
-                    });
+                serviceBtns.forEach(b => {
+                    const isActive = b === btn;
+                    b.classList.toggle('active-service', isActive);
+                    b.classList.toggle('inactive-service', !isActive);
+                    b.setAttribute('aria-selected', String(isActive));
+                    b.setAttribute('tabindex', isActive ? '0' : '-1');
+                });
+
+                servicePanels.forEach(panel => {
+                    panel.classList.toggle('hidden', panel.id !== `${service}-content`);
+                });
+            };
+
+            serviceBtns.forEach((btn, i) => {
+                btn.addEventListener('click', () => selectService(btn));
+
+                // Arrow-key roving focus, per the WAI-ARIA tabs pattern.
+                btn.addEventListener('keydown', (e) => {
+                    const keys = { ArrowUp: -1, ArrowLeft: -1, ArrowDown: 1, ArrowRight: 1 };
+                    let next = null;
+                    if (e.key in keys) {
+                        next = (i + keys[e.key] + serviceBtns.length) % serviceBtns.length;
+                    } else if (e.key === 'Home') {
+                        next = 0;
+                    } else if (e.key === 'End') {
+                        next = serviceBtns.length - 1;
+                    }
+                    if (next === null) return;
+                    e.preventDefault();
+                    selectService(serviceBtns[next]);
+                    serviceBtns[next].focus();
                 });
             });
         });
