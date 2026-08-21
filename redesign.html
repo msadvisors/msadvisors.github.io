@@ -143,6 +143,7 @@
   --on-navy-2:  #B9C9F2;
   --navy-field: #1E3A8A;
   --focus:      #1E3A8A;
+  --portrait-ground: #F1EDE5;
   --shadow:     0 1px 2px rgba(17, 24, 39, .04);
   --shadow-up:  0 12px 32px -18px rgba(17, 24, 39, .32);
 
@@ -171,6 +172,7 @@
     --on-navy-2:  #C4D5FF;
     --navy-field: #14264F;
     --focus:      #9CBAFF;
+    --portrait-ground: #E7E2D8;
     --shadow:     none;
     --shadow-up:  0 12px 32px -18px rgba(0, 0, 0, .8);
   }
@@ -191,6 +193,7 @@
   --on-navy-2:  #C4D5FF;
   --navy-field: #14264F;
   --focus:      #9CBAFF;
+  --portrait-ground: #E7E2D8;
   --shadow:     none;
   --shadow-up:  0 12px 32px -18px rgba(0, 0, 0, .8);
 }
@@ -548,9 +551,17 @@ a.tombstone:hover .tombstone__more svg { transform: translateX(3px); }
 .firm h3 { font-family: var(--f-display); margin-bottom: .75rem; }
 .firm__block + .firm__block { margin-top: 2.5rem; }
 .card { border: 1px solid var(--rule-2); background: var(--surface); }
+/* Halftone portrait. The plate behind it stays light in both themes:
+   inverting a face gives a photographic negative, and the deal
+   announcement already reads as a light plate on the dark card.
+   multiply drops the image's white ground onto the plate colour. */
+.founder__portrait {
+  background: var(--portrait-ground); border-bottom: 1px solid var(--rule);
+}
 .founder__img {
-  width: 100%; height: auto; aspect-ratio: 5 / 4; object-fit: cover; object-position: 50% 20%;
-  border-bottom: 1px solid var(--rule); filter: grayscale(.15) contrast(1.02);
+  width: 100%; height: auto; aspect-ratio: 5 / 4;
+  object-fit: cover; object-position: 50% 18%;
+  mix-blend-mode: multiply;
 }
 .founder__body { padding: clamp(1.5rem, 3vw, 2rem); }
 .founder__name { font-family: var(--f-display); font-size: 1.375rem; }
@@ -929,7 +940,9 @@ a.tombstone:hover .tombstone__more svg { transform: translateX(3px); }
       </div>
 
       <div class="card" data-reveal>
-        <img class="founder__img" src="assets/Mitanshu.jpg" width="800" height="640" loading="lazy" decoding="async" alt="Mitanshu Shah, Founder and CEO of MS Advisors">
+        <div class="founder__portrait">
+          <img class="founder__img" src="assets/Mitanshu-portrait.webp" width="760" height="608" loading="lazy" decoding="async" alt="Mitanshu Shah, Founder and CEO of MS Advisors">
+        </div>
         <div class="founder__body">
           <p class="founder__name">Mitanshu Shah</p>
           <p class="founder__role">Founder &amp; CEO &middot; CMA, PGDBM</p>
