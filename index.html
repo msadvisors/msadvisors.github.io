@@ -63,6 +63,18 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { darkMode: 'class' };</script>
+    <script>
+        // Runs before paint so a dark-mode visitor never sees a light flash.
+        (function () {
+            try {
+                var stored = localStorage.getItem('theme');
+                var dark = stored ? stored === 'dark'
+                    : window.matchMedia('(prefers-color-scheme: dark)').matches;
+                document.documentElement.classList.toggle('dark', dark);
+            } catch (e) { /* private mode: fall back to light */ }
+        })();
+    </script>
     <!-- Chosen Palette: Warm Neutrals & Deep Blue -->
     <!-- Application Structure Plan: A single-page, top-to-bottom narrative that moves from the value proposition (Home, with a stat strip) to the firm's story and founder (About), to proof of execution (Transactions: concluded deal announcements plus a client testimonial), then service detail (Services), differentiators (Why Us), the founder's prior-career evidence (Track Record), and a transaction-oriented call-to-action (Contact). Transactions sits high in the page because closed mandates are the strongest credibility signal for an advisory firm. The key interaction remains the tabbed Services section, now carrying sub-item detail per service. -->
     <!-- Visualization & Content Choices: The source material is textual, so the focus is on clear typography, structured layouts (flexbox/grid), and a single point of interaction to enhance user engagement without overwhelming them. Report Info: Service descriptions -> Goal: Organize/Inform -> Viz/Presentation Method: Interactive vertical tabs -> Interaction: User clicks a service to reveal its description, with active states indicating the current selection -> Justification: This breaks down a dense list of services into user-controlled, digestible chunks, improving readability and engagement over a static list. Library/Method: Vanilla JavaScript for tab functionality. -->
@@ -120,39 +132,55 @@
             background-color: #ffffff;
             box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
         }
+        .dark .active-service {
+            background-color: #2563eb;
+        }
+        .dark .inactive-service {
+            color: #cbd5e1;
+        }
+        .dark .inactive-service:hover {
+            background-color: rgba(255, 255, 255, 0.06);
+            box-shadow: none;
+        }
     </style>
 </head>
-<body class="bg-[#FDFBF8] text-[#111827]">
+<body class="bg-[#FDFBF8] text-[#111827] dark:bg-[#0B1220] dark:text-slate-200 transition-colors duration-300">
 
     <!-- Header & Navigation -->
-    <header class="bg-[#FDFBF8]/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+    <header class="bg-[#FDFBF8]/80 dark:bg-[#0B1220]/80 backdrop-blur-md sticky top-0 z-50 shadow-sm dark:shadow-none dark:border-b dark:border-slate-800 transition-colors duration-300">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
                 <a href="#home" class="flex items-center">
                     <img src="assets/logo.svg" alt="MS Advisors Logo" class="h-10 w-10 mr-2">
-                    <span class="text-2xl font-bold text-[#1e3a8a] font-lora self-end">MS Advisors</span>
+                    <span class="text-2xl font-bold text-[#1e3a8a] dark:text-blue-300 font-lora self-end">MS Advisors</span>
                 </a>
                 <nav class="hidden md:flex space-x-8">
-                    <a href="#about" class="text-gray-600 hover:text-[#1e3a8a] transition duration-300">About</a>
-                    <a href="#transactions" class="text-gray-600 hover:text-[#1e3a8a] transition duration-300">Transactions</a>
-                    <a href="#services" class="text-gray-600 hover:text-[#1e3a8a] transition duration-300">Services</a>
-                    <a href="#why-us" class="text-gray-600 hover:text-[#1e3a8a] transition duration-300">Why Us</a>
-                    <a href="#contact" class="text-gray-600 hover:text-[#1e3a8a] transition duration-300">Contact</a>
+                    <a href="#about" class="text-gray-600 dark:text-slate-300 hover:text-[#1e3a8a] dark:hover:text-blue-300 transition duration-300">About</a>
+                    <a href="#transactions" class="text-gray-600 dark:text-slate-300 hover:text-[#1e3a8a] dark:hover:text-blue-300 transition duration-300">Transactions</a>
+                    <a href="#services" class="text-gray-600 dark:text-slate-300 hover:text-[#1e3a8a] dark:hover:text-blue-300 transition duration-300">Services</a>
+                    <a href="#why-us" class="text-gray-600 dark:text-slate-300 hover:text-[#1e3a8a] dark:hover:text-blue-300 transition duration-300">Why Us</a>
+                    <a href="#contact" class="text-gray-600 dark:text-slate-300 hover:text-[#1e3a8a] dark:hover:text-blue-300 transition duration-300">Contact</a>
                 </nav>
-                <div class="md:hidden">
-                    <button id="mobile-menu-button" class="text-gray-600 hover:text-[#1e3a8a] rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1e3a8a] focus-visible:ring-offset-2" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobile-menu">
+                <div class="flex items-center gap-1">
+                    <button id="theme-toggle" type="button" aria-label="Switch to dark theme" aria-pressed="false" class="p-2 rounded-lg text-gray-600 hover:text-[#1e3a8a] hover:bg-gray-100 dark:text-slate-300 dark:hover:text-white dark:hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1e3a8a] dark:focus-visible:ring-blue-400 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#0B1220] transition-colors">
+                        <svg id="theme-icon-sun" aria-hidden="true" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        <svg id="theme-icon-moon" aria-hidden="true" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                    </button>
+                    <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-600 dark:text-slate-400 hover:text-[#1e3a8a] rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1e3a8a] focus-visible:ring-offset-2" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobile-menu">
                         <svg aria-hidden="true" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
                     </button>
+                    </div>
                 </div>
             </div>
         </div>
         <!-- Mobile Menu -->
-        <div id="mobile-menu" class="md:hidden hidden bg-[#FDFBF8] py-4">
-            <a href="#about" class="block text-center py-2 text-gray-600 hover:bg-gray-200 active:bg-gray-200">About</a>
-            <a href="#transactions" class="block text-center py-2 text-gray-600 hover:bg-gray-200 active:bg-gray-200">Transactions</a>
-            <a href="#services" class="block text-center py-2 text-gray-600 hover:bg-gray-200 active:bg-gray-200">Services</a>
-            <a href="#why-us" class="block text-center py-2 text-gray-600 hover:bg-gray-200 active:bg-gray-200">Why Us</a>
-            <a href="#contact" class="block text-center py-2 text-gray-600 hover:bg-gray-200 active:bg-gray-200">Contact</a>
+        <div id="mobile-menu" class="md:hidden hidden bg-[#FDFBF8] dark:bg-[#0B1220] py-4">
+            <a href="#about" class="block text-center py-2 text-gray-600 dark:text-slate-300 hover:bg-gray-200 active:bg-gray-200 dark:hover:bg-white/10 dark:active:bg-white/10">About</a>
+            <a href="#transactions" class="block text-center py-2 text-gray-600 dark:text-slate-300 hover:bg-gray-200 active:bg-gray-200 dark:hover:bg-white/10 dark:active:bg-white/10">Transactions</a>
+            <a href="#services" class="block text-center py-2 text-gray-600 dark:text-slate-300 hover:bg-gray-200 active:bg-gray-200 dark:hover:bg-white/10 dark:active:bg-white/10">Services</a>
+            <a href="#why-us" class="block text-center py-2 text-gray-600 dark:text-slate-300 hover:bg-gray-200 active:bg-gray-200 dark:hover:bg-white/10 dark:active:bg-white/10">Why Us</a>
+            <a href="#contact" class="block text-center py-2 text-gray-600 dark:text-slate-300 hover:bg-gray-200 active:bg-gray-200 dark:hover:bg-white/10 dark:active:bg-white/10">Contact</a>
         </div>
     </header>
 
@@ -160,7 +188,7 @@
         
         <!-- Section 1: Home -->
         <section id="home" class="relative md:min-h-[calc(100vh-80px)] flex items-center justify-center text-white overflow-hidden py-16 md:py-20" style="background-image: url('assets/accordian_images/img1.jpg'); background-size: cover; background-position: center;">
-            <div class="absolute top-0 left-0 w-full h-full bg-black opacity-50 z-10"></div>
+            <div class="absolute top-0 left-0 w-full h-full bg-black opacity-50 dark:opacity-60 z-10"></div>
             <div class="relative z-20 text-center mx-auto max-w-4xl px-2">
                 <p class="eyebrow text-blue-200 mb-5">Corporate Advisory &amp; M&amp;A</p>
                 <h1 class="text-3xl sm:text-4xl md:text-6xl font-bold tracking-tight">Institutional-quality advisory for promoter-led businesses</h1>
@@ -194,46 +222,46 @@
         <section id="about" class="pt-24 pb-16">
             <div class="text-center mb-16">
                 <h2 class="text-3xl md:text-4xl font-bold">About MS Advisors</h2>
-                <p class="mt-4 text-gray-600 max-w-3xl mx-auto">A boutique corporate advisory firm committed to leading companies to profitable growth.</p>
+                <p class="mt-4 text-gray-600 dark:text-slate-400 max-w-3xl mx-auto">A boutique corporate advisory firm committed to leading companies to profitable growth.</p>
             </div>
             <div class="grid md:grid-cols-5 gap-12 items-start">
                 <div class="md:col-span-3">
                     <h3 class="text-2xl font-semibold mb-4">Our Story</h3>
-                    <p class="text-gray-600 mb-6 max-w-prose">MS Advisors is a boutique corporate advisory firm founded in 2025 by Mitanshu Shah, built as a one-stop consulting practice for running a business efficiently. Since founding, the firm has advised on two M&amp;A transactions, including the divestment of a controlling stake in a listed specialty fine chemicals company, and holds active mandates across pharmaceuticals, specialty fine chemicals, utilities and allied sectors. We work to help clients achieve breakthroughs in growth and profitability, develop a performance culture, and translate their vision into a working road map, partnering and handholding rather than simply advising.</p>
+                    <p class="text-gray-600 dark:text-slate-400 mb-6 max-w-prose">MS Advisors is a boutique corporate advisory firm founded in 2025 by Mitanshu Shah, built as a one-stop consulting practice for running a business efficiently. Since founding, the firm has advised on two M&amp;A transactions, including the divestment of a controlling stake in a listed specialty fine chemicals company, and holds active mandates across pharmaceuticals, specialty fine chemicals, utilities and allied sectors. We work to help clients achieve breakthroughs in growth and profitability, develop a performance culture, and translate their vision into a working road map, partnering and handholding rather than simply advising.</p>
                     <h3 class="text-2xl font-semibold mb-4">Our Vision</h3>
-                    <p class="text-gray-600 max-w-prose">Our vision is to support clients to achieve breakthroughs in business growth and profitability, develop a performance culture, and create a strategic plan that translates their vision into a road map.</p>
+                    <p class="text-gray-600 dark:text-slate-400 max-w-prose">Our vision is to support clients to achieve breakthroughs in business growth and profitability, develop a performance culture, and create a strategic plan that translates their vision into a road map.</p>
                 </div>
-                <div class="md:col-span-2 bg-white p-8 md:p-10 rounded-xl shadow-lg border border-gray-100">
+                <div class="md:col-span-2 bg-white dark:bg-slate-900 p-8 md:p-10 rounded-xl shadow-lg border border-gray-100 dark:border-slate-800">
                     <div class="text-center">
                         <img src="assets/Mitanshu.jpg" alt="Mitanshu Shah, Founder & CEO of MS Advisors" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-white shadow-md">
                         <h3 class="text-xl font-bold">Mitanshu Shah</h3>
-                        <p class="text-gray-500">Founder & CEO, CMA & PGDBM</p>
+                        <p class="text-gray-500 dark:text-slate-400">Founder & CEO, CMA & PGDBM</p>
                     </div>
-                    <p class="text-sm text-gray-600 mt-4 italic">"My consulting style is engaging and riveting. I partner and handhold with clients, rather than just advising. I roll up my sleeves and work with their teams to deliver solutions that work and are enduring."</p>
-                    <p class="text-sm text-gray-700 mt-4 font-semibold">31 years of experience spanning Healthcare, Chemical, Real Estate, Engineering, and Financial Services.</p>
-                    <div class="mt-6 pt-6 border-t border-gray-100">
-                        <p class="eyebrow text-[#1e3a8a] mb-2">Prior Experience</p>
-                        <p class="text-sm text-gray-600 mb-4">31 years across finance, strategy and M&amp;A in leading Indian and multinational organisations.</p>
+                    <p class="text-sm text-gray-600 dark:text-slate-400 mt-4 italic">"My consulting style is engaging and riveting. I partner and handhold with clients, rather than just advising. I roll up my sleeves and work with their teams to deliver solutions that work and are enduring."</p>
+                    <p class="text-sm text-gray-700 dark:text-slate-300 mt-4 font-semibold">31 years of experience spanning Healthcare, Chemical, Real Estate, Engineering, and Financial Services.</p>
+                    <div class="mt-6 pt-6 border-t border-gray-100 dark:border-slate-800">
+                        <p class="eyebrow text-[#1e3a8a] dark:text-blue-300 mb-2">Prior Experience</p>
+                        <p class="text-sm text-gray-600 dark:text-slate-400 mb-4">31 years across finance, strategy and M&amp;A in leading Indian and multinational organisations.</p>
                         <ul class="space-y-3">
                             <li>
-                                <p class="text-sm font-semibold text-gray-800">Arvind SmartSpaces Limited</p>
-                                <p class="text-xs text-gray-500">Chief Financial Officer &middot; 1 year</p>
+                                <p class="text-sm font-semibold text-gray-800 dark:text-slate-200">Arvind SmartSpaces Limited</p>
+                                <p class="text-xs text-gray-500 dark:text-slate-400">Chief Financial Officer &middot; 1 year</p>
                             </li>
                             <li>
-                                <p class="text-sm font-semibold text-gray-800">Alembic Pharmaceuticals Limited</p>
-                                <p class="text-xs text-gray-500">Senior Vice President, Finance &middot; 18 years</p>
+                                <p class="text-sm font-semibold text-gray-800 dark:text-slate-200">Alembic Pharmaceuticals Limited</p>
+                                <p class="text-xs text-gray-500 dark:text-slate-400">Senior Vice President, Finance &middot; 18 years</p>
                             </li>
                             <li>
-                                <p class="text-sm font-semibold text-gray-800">Schneider Electric India</p>
-                                <p class="text-xs text-gray-500">General Manager, Finance &amp; Legal &middot; 8 years</p>
+                                <p class="text-sm font-semibold text-gray-800 dark:text-slate-200">Schneider Electric India</p>
+                                <p class="text-xs text-gray-500 dark:text-slate-400">General Manager, Finance &amp; Legal &middot; 8 years</p>
                             </li>
                             <li>
-                                <p class="text-sm font-semibold text-gray-800">Sun Pharmaceutical Industries Ltd</p>
-                                <p class="text-xs text-gray-500">Senior Executive, Finance &middot; 3 years</p>
+                                <p class="text-sm font-semibold text-gray-800 dark:text-slate-200">Sun Pharmaceutical Industries Ltd</p>
+                                <p class="text-xs text-gray-500 dark:text-slate-400">Senior Executive, Finance &middot; 3 years</p>
                             </li>
                             <li>
-                                <p class="text-sm font-semibold text-gray-800">Sanofi India Limited</p>
-                                <p class="text-xs text-gray-500">Executive, Finance &middot; 2 years</p>
+                                <p class="text-sm font-semibold text-gray-800 dark:text-slate-200">Sanofi India Limited</p>
+                                <p class="text-xs text-gray-500 dark:text-slate-400">Executive, Finance &middot; 2 years</p>
                             </li>
                         </ul>
                     </div>
@@ -244,58 +272,58 @@
         <!-- Section 3: Transactions -->
         <section id="transactions" class="py-24">
             <div class="text-center mb-16">
-                <p class="eyebrow text-[#1e3a8a] mb-3">Deal Announcements</p>
+                <p class="eyebrow text-[#1e3a8a] dark:text-blue-300 mb-3">Deal Announcements</p>
                 <h2 class="text-3xl md:text-4xl font-bold">Recent Transactions</h2>
-                <p class="mt-4 text-gray-600 max-w-3xl mx-auto">A record of mandates concluded for promoters and boards across specialty chemicals and allied sectors.</p>
+                <p class="mt-4 text-gray-600 dark:text-slate-400 max-w-3xl mx-auto">A record of mandates concluded for promoters and boards across specialty chemicals and allied sectors.</p>
             </div>
 
             <!-- Deal 1: Kronox / Indo Borax -->
-            <article class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden mb-10">
+            <article class="bg-white dark:bg-slate-900 rounded-2xl shadow-lg border border-gray-100 dark:border-slate-800 overflow-hidden mb-10">
                 <div class="grid lg:grid-cols-5">
                     <div class="lg:col-span-3 p-8 md:p-12 order-last lg:order-first">
-                        <p class="eyebrow text-[#1e3a8a] mb-3">Change of Control &mdash; Listed to Listed</p>
+                        <p class="eyebrow text-[#1e3a8a] dark:text-blue-300 mb-3">Change of Control &mdash; Listed to Listed</p>
                         <h3 class="text-2xl md:text-3xl font-bold leading-snug">Kronox Lab Sciences Limited <span class="text-gray-400 font-normal">/</span> Indo Borax &amp; Chemicals Limited</h3>
-                        <p class="mt-4 text-gray-700 font-medium">MS Advisors, with CNK &amp; Associates LLP, acted as exclusive Strategic and M&amp;A Advisors to the promoters of Kronox Lab Sciences Limited.</p>
-                        <p class="mt-2 text-sm text-gray-500">NSE: KRONOX | BSE: 544187 &nbsp;&rarr;&nbsp; NSE: INDOBORAX | BSE: 524342</p>
+                        <p class="mt-4 text-gray-700 dark:text-slate-300 font-medium">MS Advisors, with CNK &amp; Associates LLP, acted as exclusive Strategic and M&amp;A Advisors to the promoters of Kronox Lab Sciences Limited.</p>
+                        <p class="mt-2 text-sm text-gray-500 dark:text-slate-400">NSE: KRONOX | BSE: 544187 &nbsp;&rarr;&nbsp; NSE: INDOBORAX | BSE: 524342</p>
 
-                        <div class="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-6 border-t border-gray-100 pt-6">
+                        <div class="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-6 border-t border-gray-100 dark:border-slate-800 pt-6">
                             <div>
-                                <p class="text-lg md:text-xl font-bold text-[#1e3a8a]">64.26%</p>
-                                <p class="mt-1 text-xs text-gray-500">Controlling stake divested</p>
+                                <p class="text-lg md:text-xl font-bold text-[#1e3a8a] dark:text-blue-300">64.26%</p>
+                                <p class="mt-1 text-xs text-gray-500 dark:text-slate-400">Controlling stake divested</p>
                             </div>
                             <div>
-                                <p class="text-lg md:text-xl font-bold text-[#1e3a8a]">20 Aug 2026</p>
-                                <p class="mt-1 text-xs text-gray-500">Agreement signed</p>
+                                <p class="text-lg md:text-xl font-bold text-[#1e3a8a] dark:text-blue-300">20 Aug 2026</p>
+                                <p class="mt-1 text-xs text-gray-500 dark:text-slate-400">Agreement signed</p>
                             </div>
                             <div>
-                                <p class="text-lg md:text-xl font-bold text-[#1e3a8a]">9.95%</p>
-                                <p class="mt-1 text-xs text-gray-500">Promoter stake retained</p>
+                                <p class="text-lg md:text-xl font-bold text-[#1e3a8a] dark:text-blue-300">9.95%</p>
+                                <p class="mt-1 text-xs text-gray-500 dark:text-slate-400">Promoter stake retained</p>
                             </div>
                             <div>
-                                <p class="text-lg md:text-xl font-bold text-[#1e3a8a]">~185</p>
-                                <p class="mt-1 text-xs text-gray-500">Products in Kronox&rsquo;s portfolio</p>
+                                <p class="text-lg md:text-xl font-bold text-[#1e3a8a] dark:text-blue-300">~185</p>
+                                <p class="mt-1 text-xs text-gray-500 dark:text-slate-400">Products in Kronox&rsquo;s portfolio</p>
                             </div>
                         </div>
 
-                        <p class="mt-8 text-gray-600">Kronox Lab Sciences, built from 2008 by Mr Ketan Ramani, Mr Pritesh Ramani and Mr Jogindersingh Jaswal into a specialty fine chemicals manufacturer serving pharmaceutical, nutraceutical and biotech customers, was listed on NSE and BSE in 2024. Its promoters have divested a 64.26% controlling stake to Indo Borax &amp; Chemicals Limited, triggering a mandatory open offer to public shareholders under the SEBI (SAST) Regulations. MS Advisors led the mandate through a six-month process, working alongside CNK &amp; Associates LLP, Sterling Associates as legal counsel, and the acquirer&rsquo;s advisers, Sidwim, Deloitte and Cyril Amarchand Mangaldas. The promoters retain a 9.95% stake and will support a structured transition, passing the business to a well-capitalised listed group with complementary operations positioned to fund its next phase of growth.</p>
+                        <p class="mt-8 text-gray-600 dark:text-slate-400">Kronox Lab Sciences, built from 2008 by Mr Ketan Ramani, Mr Pritesh Ramani and Mr Jogindersingh Jaswal into a specialty fine chemicals manufacturer serving pharmaceutical, nutraceutical and biotech customers, was listed on NSE and BSE in 2024. Its promoters have divested a 64.26% controlling stake to Indo Borax &amp; Chemicals Limited, triggering a mandatory open offer to public shareholders under the SEBI (SAST) Regulations. MS Advisors led the mandate through a six-month process, working alongside CNK &amp; Associates LLP, Sterling Associates as legal counsel, and the acquirer&rsquo;s advisers, Sidwim, Deloitte and Cyril Amarchand Mangaldas. The promoters retain a 9.95% stake and will support a structured transition, passing the business to a well-capitalised listed group with complementary operations positioned to fund its next phase of growth.</p>
 
-                        <blockquote class="mt-8 border-l-4 border-[#1e3a8a] pl-6">
-                            <p class="text-gray-800 italic">&ldquo;When founders of that calibre transition control, price is only one variable. Stewardship of the institution is the other, and it is the harder one to underwrite.&rdquo;</p>
-                            <footer class="mt-3 text-sm text-gray-500">Mitanshu Shah, Founder &amp; CEO</footer>
+                        <blockquote class="mt-8 border-l-4 border-[#1e3a8a] dark:border-blue-400 pl-6">
+                            <p class="text-gray-800 dark:text-slate-200 italic">&ldquo;When founders of that calibre transition control, price is only one variable. Stewardship of the institution is the other, and it is the harder one to underwrite.&rdquo;</p>
+                            <footer class="mt-3 text-sm text-gray-500 dark:text-slate-400">Mitanshu Shah, Founder &amp; CEO</footer>
                         </blockquote>
                     </div>
-                    <div class="lg:col-span-2 bg-gray-50 flex items-center justify-center p-6 md:p-8 order-first lg:order-last">
+                    <div class="lg:col-span-2 bg-gray-50 dark:bg-slate-800 flex items-center justify-center p-6 md:p-8 order-first lg:order-last">
                         <img src="assets/deals/kronox-indoborax-announcement.jpg" alt="Deal announcement: MS Advisors advised the promoters of Kronox Lab Sciences Limited on the divestment of a 64.26% controlling stake to Indo Borax &amp; Chemicals Limited" class="w-full max-w-md rounded-xl shadow-md" loading="lazy" width="1200" height="1200">
                     </div>
                 </div>
             </article>
 
             <!-- Deal 2: Maksons Fine Chem -->
-            <article class="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 md:p-12 mb-10">
-                <p class="eyebrow text-[#1e3a8a] mb-3">Sell-Side M&amp;A</p>
+            <article class="bg-white dark:bg-slate-900 rounded-2xl shadow-lg border border-gray-100 dark:border-slate-800 p-8 md:p-12 mb-10">
+                <p class="eyebrow text-[#1e3a8a] dark:text-blue-300 mb-3">Sell-Side M&amp;A</p>
                 <h3 class="text-2xl md:text-3xl font-bold">Maksons Fine Chem Pvt Ltd</h3>
-                <p class="mt-4 text-gray-700 font-medium max-w-3xl">MS Advisors acted as exclusive sell-side advisor, leading the mandate end to end from origination to closure.</p>
-                <p class="mt-6 text-gray-600 max-w-prose">MS Advisors advised the promoters of Maksons Fine Chem Pvt Ltd, Ankleshwar, on its acquisition by a large India-based, PE-backed API platform with established interests in specialty fine chemicals and pharmaceuticals. The firm led origination, structuring, negotiations and closure. This was the first M&amp;A transaction closed under the MS Advisors banner, and set the template for the process discipline the firm now applies to every promoter mandate.</p>
+                <p class="mt-4 text-gray-700 dark:text-slate-300 font-medium max-w-3xl">MS Advisors acted as exclusive sell-side advisor, leading the mandate end to end from origination to closure.</p>
+                <p class="mt-6 text-gray-600 dark:text-slate-400 max-w-prose">MS Advisors advised the promoters of Maksons Fine Chem Pvt Ltd, Ankleshwar, on its acquisition by a large India-based, PE-backed API platform with established interests in specialty fine chemicals and pharmaceuticals. The firm led origination, structuring, negotiations and closure. This was the first M&amp;A transaction closed under the MS Advisors banner, and set the template for the process discipline the firm now applies to every promoter mandate.</p>
             </article>
 
             <!-- Client testimonial -->
@@ -312,152 +340,152 @@
         </section>
 
         <!-- Section 4: Our Services -->
-        <section id="services" class="py-24 bg-white rounded-2xl px-4 md:px-12">
+        <section id="services" class="py-24 bg-white dark:bg-slate-900 rounded-2xl px-4 md:px-12 transition-colors duration-300">
             <div class="text-center mb-16">
                 <h2 class="text-3xl md:text-4xl font-bold">Our Corporate Advisory Services</h2>
-                <p class="mt-4 text-gray-600 max-w-3xl mx-auto">Five practice areas, each led end to end. Select a service to see how we work and what the mandate covers.</p>
+                <p class="mt-4 text-gray-600 dark:text-slate-400 max-w-3xl mx-auto">Five practice areas, each led end to end. Select a service to see how we work and what the mandate covers.</p>
             </div>
             <div class="flex flex-col md:flex-row gap-8 md:min-h-[440px]">
-                <div role="tablist" aria-label="Corporate advisory services" class="w-full md:w-1/3 flex flex-col space-y-2 bg-gray-50 rounded-lg p-8 h-full justify-center md:min-h-[400px]">
+                <div role="tablist" aria-label="Corporate advisory services" class="w-full md:w-1/3 flex flex-col space-y-2 bg-gray-50 dark:bg-slate-800 rounded-lg p-8 justify-center md:min-h-[400px]">
                     <button data-service="finance" id="finance-tab" role="tab" aria-selected="true" aria-controls="finance-content" tabindex="0" class="service-btn text-left p-4 rounded-lg transition duration-300 font-semibold active-service">Transformation / Business Finance</button>
                     <button data-service="structuring" id="structuring-tab" role="tab" aria-selected="false" aria-controls="structuring-content" tabindex="-1" class="service-btn text-left p-4 rounded-lg transition duration-300 font-semibold inactive-service">Financial Structuring / M&amp;A</button>
                     <button data-service="ir" id="ir-tab" role="tab" aria-selected="false" aria-controls="ir-content" tabindex="-1" class="service-btn text-left p-4 rounded-lg transition duration-300 font-semibold inactive-service">Investor Relations</button>
                     <button data-service="partnering" id="partnering-tab" role="tab" aria-selected="false" aria-controls="partnering-content" tabindex="-1" class="service-btn text-left p-4 rounded-lg transition duration-300 font-semibold inactive-service">Strategic Partnering</button>
                     <button data-service="treasury" id="treasury-tab" role="tab" aria-selected="false" aria-controls="treasury-content" tabindex="-1" class="service-btn text-left p-4 rounded-lg transition duration-300 font-semibold inactive-service">Treasury Management</button>
                 </div>
-                <div class="w-full md:w-2/3 p-8 bg-gray-50 rounded-lg h-full flex items-start md:min-h-[400px]">
+                <div class="w-full md:w-2/3 p-8 bg-gray-50 dark:bg-slate-800 rounded-lg flex items-start md:min-h-[400px]">
                     <div id="service-content" class="w-full">
                             <div id="finance-content" role="tabpanel" aria-labelledby="finance-tab" tabindex="0" class="service-panel is-active">
                             <h3 class="text-2xl font-bold mb-4">Transformation / Business Finance</h3>
-                            <p class="text-gray-700">We help promoters build a business finance function that controls and lowers cost, brings agility and competitiveness, and instils the discipline of deciding on reliable data. The focus is on impactful dashboards, automation and transformational cost reduction, not incremental fixes.</p>
+                            <p class="text-gray-700 dark:text-slate-300">We help promoters build a business finance function that controls and lowers cost, brings agility and competitiveness, and instils the discipline of deciding on reliable data. The focus is on impactful dashboards, automation and transformational cost reduction, not incremental fixes.</p>
                             <ul class="mt-6 grid sm:grid-cols-2 gap-x-8 gap-y-4">
-                                <li class="border-l-2 border-gray-200 pl-4">
-                                    <span class="block font-semibold text-gray-900">Cash Flow Strategy</span>
-                                    <span class="text-sm text-gray-600">Cash flow management strategies built around the realities of the business.</span>
+                                <li class="border-l-2 border-gray-200 dark:border-slate-700 pl-4">
+                                    <span class="block font-semibold text-gray-900 dark:text-slate-100">Cash Flow Strategy</span>
+                                    <span class="text-sm text-gray-600 dark:text-slate-400">Cash flow management strategies built around the realities of the business.</span>
                                 </li>
-                                <li class="border-l-2 border-gray-200 pl-4">
-                                    <span class="block font-semibold text-gray-900">Risk Management</span>
-                                    <span class="text-sm text-gray-600">Identifying and managing financial risk before it becomes a crisis.</span>
+                                <li class="border-l-2 border-gray-200 dark:border-slate-700 pl-4">
+                                    <span class="block font-semibold text-gray-900 dark:text-slate-100">Risk Management</span>
+                                    <span class="text-sm text-gray-600 dark:text-slate-400">Identifying and managing financial risk before it becomes a crisis.</span>
                                 </li>
-                                <li class="border-l-2 border-gray-200 pl-4">
-                                    <span class="block font-semibold text-gray-900">Planning &amp; Analysis</span>
-                                    <span class="text-sm text-gray-600">Financial planning and analysis that supports real decisions, not just reporting.</span>
+                                <li class="border-l-2 border-gray-200 dark:border-slate-700 pl-4">
+                                    <span class="block font-semibold text-gray-900 dark:text-slate-100">Planning &amp; Analysis</span>
+                                    <span class="text-sm text-gray-600 dark:text-slate-400">Financial planning and analysis that supports real decisions, not just reporting.</span>
                                 </li>
-                                <li class="border-l-2 border-gray-200 pl-4">
-                                    <span class="block font-semibold text-gray-900">Process &amp; Cost Evaluation</span>
-                                    <span class="text-sm text-gray-600">Business process evaluation and cost management across the organisation.</span>
+                                <li class="border-l-2 border-gray-200 dark:border-slate-700 pl-4">
+                                    <span class="block font-semibold text-gray-900 dark:text-slate-100">Process &amp; Cost Evaluation</span>
+                                    <span class="text-sm text-gray-600 dark:text-slate-400">Business process evaluation and cost management across the organisation.</span>
                                 </li>
-                                <li class="border-l-2 border-gray-200 pl-4">
-                                    <span class="block font-semibold text-gray-900">AOP Design</span>
-                                    <span class="text-sm text-gray-600">Design and implementation of the annual operating plan system.</span>
+                                <li class="border-l-2 border-gray-200 dark:border-slate-700 pl-4">
+                                    <span class="block font-semibold text-gray-900 dark:text-slate-100">AOP Design</span>
+                                    <span class="text-sm text-gray-600 dark:text-slate-400">Design and implementation of the annual operating plan system.</span>
                                 </li>
                             </ul>
                         </div>
                         <div id="structuring-content" role="tabpanel" aria-labelledby="structuring-tab" tabindex="0" class="service-panel">
                             <h3 class="text-2xl font-bold mb-4">Financial Structuring / M&amp;A</h3>
-                            <p class="text-gray-700">We advise promoters and boards through the capital-raising and ownership decisions that define a company&rsquo;s next stage, from listing to acquisition to expansion financing. Each mandate is led end to end, from structuring through negotiation to close.</p>
+                            <p class="text-gray-700 dark:text-slate-300">We advise promoters and boards through the capital-raising and ownership decisions that define a company&rsquo;s next stage, from listing to acquisition to expansion financing. Each mandate is led end to end, from structuring through negotiation to close.</p>
                             <ul class="mt-6 grid sm:grid-cols-2 gap-x-8 gap-y-4">
-                                <li class="border-l-2 border-gray-200 pl-4">
-                                    <span class="block font-semibold text-gray-900">IPO / QIP Advisory</span>
-                                    <span class="text-sm text-gray-600">Identifying investment bankers and legal counsel, document creation, listing and pre-IPO advisory.</span>
+                                <li class="border-l-2 border-gray-200 dark:border-slate-700 pl-4">
+                                    <span class="block font-semibold text-gray-900 dark:text-slate-100">IPO / QIP Advisory</span>
+                                    <span class="text-sm text-gray-600 dark:text-slate-400">Identifying investment bankers and legal counsel, document creation, listing and pre-IPO advisory.</span>
                                 </li>
-                                <li class="border-l-2 border-gray-200 pl-4">
-                                    <span class="block font-semibold text-gray-900">M&amp;A Advisory</span>
-                                    <span class="text-sm text-gray-600">Valuation, financial and legal due diligence, and negotiations, onshore and offshore.</span>
+                                <li class="border-l-2 border-gray-200 dark:border-slate-700 pl-4">
+                                    <span class="block font-semibold text-gray-900 dark:text-slate-100">M&amp;A Advisory</span>
+                                    <span class="text-sm text-gray-600 dark:text-slate-400">Valuation, financial and legal due diligence, and negotiations, onshore and offshore.</span>
                                 </li>
-                                <li class="border-l-2 border-gray-200 pl-4">
-                                    <span class="block font-semibold text-gray-900">Syndication</span>
-                                    <span class="text-sm text-gray-600">Financing for growth, expansion and acquisition through banks and NBFCs, fund and non-fund based.</span>
+                                <li class="border-l-2 border-gray-200 dark:border-slate-700 pl-4">
+                                    <span class="block font-semibold text-gray-900 dark:text-slate-100">Syndication</span>
+                                    <span class="text-sm text-gray-600 dark:text-slate-400">Financing for growth, expansion and acquisition through banks and NBFCs, fund and non-fund based.</span>
                                 </li>
-                                <li class="border-l-2 border-gray-200 pl-4">
-                                    <span class="block font-semibold text-gray-900">Strategic Advisory</span>
-                                    <span class="text-sm text-gray-600">Change management, business model assessment, SWOT analysis and capacity building.</span>
+                                <li class="border-l-2 border-gray-200 dark:border-slate-700 pl-4">
+                                    <span class="block font-semibold text-gray-900 dark:text-slate-100">Strategic Advisory</span>
+                                    <span class="text-sm text-gray-600 dark:text-slate-400">Change management, business model assessment, SWOT analysis and capacity building.</span>
                                 </li>
-                                <li class="border-l-2 border-gray-200 pl-4">
-                                    <span class="block font-semibold text-gray-900">Cross-Border Set-Up</span>
-                                    <span class="text-sm text-gray-600">Overseas holding and operating company structuring, and offshore entity creation and accounting.</span>
+                                <li class="border-l-2 border-gray-200 dark:border-slate-700 pl-4">
+                                    <span class="block font-semibold text-gray-900 dark:text-slate-100">Cross-Border Set-Up</span>
+                                    <span class="text-sm text-gray-600 dark:text-slate-400">Overseas holding and operating company structuring, and offshore entity creation and accounting.</span>
                                 </li>
                             </ul>
                         </div>
                         <div id="ir-content" role="tabpanel" aria-labelledby="ir-tab" tabindex="0" class="service-panel">
                             <h3 class="text-2xl font-bold mb-4">Investor Relations</h3>
-                            <p class="text-gray-700">We help listed companies strategise and operationalise their investor relations programme, benchmarked against best practice. The goal is a cap table built on quality institutional ownership and a communication cadence that investors trust.</p>
+                            <p class="text-gray-700 dark:text-slate-300">We help listed companies strategise and operationalise their investor relations programme, benchmarked against best practice. The goal is a cap table built on quality institutional ownership and a communication cadence that investors trust.</p>
                             <ul class="mt-6 grid sm:grid-cols-2 gap-x-8 gap-y-4">
-                                <li class="border-l-2 border-gray-200 pl-4">
-                                    <span class="block font-semibold text-gray-900">IR Strategy</span>
-                                    <span class="text-sm text-gray-600">Strategising and operationalising the investor relations plan.</span>
+                                <li class="border-l-2 border-gray-200 dark:border-slate-700 pl-4">
+                                    <span class="block font-semibold text-gray-900 dark:text-slate-100">IR Strategy</span>
+                                    <span class="text-sm text-gray-600 dark:text-slate-400">Strategising and operationalising the investor relations plan.</span>
                                 </li>
-                                <li class="border-l-2 border-gray-200 pl-4">
-                                    <span class="block font-semibold text-gray-900">Benchmarking</span>
-                                    <span class="text-sm text-gray-600">Assessing existing IR efforts against best practice.</span>
+                                <li class="border-l-2 border-gray-200 dark:border-slate-700 pl-4">
+                                    <span class="block font-semibold text-gray-900 dark:text-slate-100">Benchmarking</span>
+                                    <span class="text-sm text-gray-600 dark:text-slate-400">Assessing existing IR efforts against best practice.</span>
                                 </li>
-                                <li class="border-l-2 border-gray-200 pl-4">
-                                    <span class="block font-semibold text-gray-900">Communication Decks</span>
-                                    <span class="text-sm text-gray-600">Investor presentations, investor kits, concall statements, transcripts and press releases.</span>
+                                <li class="border-l-2 border-gray-200 dark:border-slate-700 pl-4">
+                                    <span class="block font-semibold text-gray-900 dark:text-slate-100">Communication Decks</span>
+                                    <span class="text-sm text-gray-600 dark:text-slate-400">Investor presentations, investor kits, concall statements, transcripts and press releases.</span>
                                 </li>
-                                <li class="border-l-2 border-gray-200 pl-4">
-                                    <span class="block font-semibold text-gray-900">Benpos &amp; Equity Analysis</span>
-                                    <span class="text-sm text-gray-600">Deciphering Benpos data and equity movement.</span>
+                                <li class="border-l-2 border-gray-200 dark:border-slate-700 pl-4">
+                                    <span class="block font-semibold text-gray-900 dark:text-slate-100">Benpos &amp; Equity Analysis</span>
+                                    <span class="text-sm text-gray-600 dark:text-slate-400">Deciphering Benpos data and equity movement.</span>
                                 </li>
-                                <li class="border-l-2 border-gray-200 pl-4">
-                                    <span class="block font-semibold text-gray-900">Investor Access</span>
-                                    <span class="text-sm text-gray-600">Arranging meetings with quality DII and FII investors to optimise the cap table.</span>
+                                <li class="border-l-2 border-gray-200 dark:border-slate-700 pl-4">
+                                    <span class="block font-semibold text-gray-900 dark:text-slate-100">Investor Access</span>
+                                    <span class="text-sm text-gray-600 dark:text-slate-400">Arranging meetings with quality DII and FII investors to optimise the cap table.</span>
                                 </li>
-                                <li class="border-l-2 border-gray-200 pl-4">
-                                    <span class="block font-semibold text-gray-900">Research Coverage</span>
-                                    <span class="text-sm text-gray-600">Securing coverage from analysts and broking houses.</span>
+                                <li class="border-l-2 border-gray-200 dark:border-slate-700 pl-4">
+                                    <span class="block font-semibold text-gray-900 dark:text-slate-100">Research Coverage</span>
+                                    <span class="text-sm text-gray-600 dark:text-slate-400">Securing coverage from analysts and broking houses.</span>
                                 </li>
                             </ul>
                         </div>
                         <div id="partnering-content" role="tabpanel" aria-labelledby="partnering-tab" tabindex="0" class="service-panel">
                             <h3 class="text-2xl font-bold mb-4">Strategic Partnering with Promoters</h3>
-                            <p class="text-gray-700">For promoters who need a senior finance partner without a full-time hire, we operate as a virtual CFO&rsquo;s office, handholding through projects, transactions and compliance so the founder can stay focused on the business.</p>
+                            <p class="text-gray-700 dark:text-slate-300">For promoters who need a senior finance partner without a full-time hire, we operate as a virtual CFO&rsquo;s office, handholding through projects, transactions and compliance so the founder can stay focused on the business.</p>
                             <ul class="mt-6 grid sm:grid-cols-2 gap-x-8 gap-y-4">
-                                <li class="border-l-2 border-gray-200 pl-4">
-                                    <span class="block font-semibold text-gray-900">Virtual CFO</span>
-                                    <span class="text-sm text-gray-600">Running the CFO&rsquo;s office as an extension of the promoter&rsquo;s team.</span>
+                                <li class="border-l-2 border-gray-200 dark:border-slate-700 pl-4">
+                                    <span class="block font-semibold text-gray-900 dark:text-slate-100">Virtual CFO</span>
+                                    <span class="text-sm text-gray-600 dark:text-slate-400">Running the CFO&rsquo;s office as an extension of the promoter&rsquo;s team.</span>
                                 </li>
-                                <li class="border-l-2 border-gray-200 pl-4">
-                                    <span class="block font-semibold text-gray-900">Project Handholding</span>
-                                    <span class="text-sm text-gray-600">Project management support for greenfield and brownfield projects.</span>
+                                <li class="border-l-2 border-gray-200 dark:border-slate-700 pl-4">
+                                    <span class="block font-semibold text-gray-900 dark:text-slate-100">Project Handholding</span>
+                                    <span class="text-sm text-gray-600 dark:text-slate-400">Project management support for greenfield and brownfield projects.</span>
                                 </li>
-                                <li class="border-l-2 border-gray-200 pl-4">
-                                    <span class="block font-semibold text-gray-900">International Foray</span>
-                                    <span class="text-sm text-gray-600">Front-end and back-end support for overseas expansion and acquisitions.</span>
+                                <li class="border-l-2 border-gray-200 dark:border-slate-700 pl-4">
+                                    <span class="block font-semibold text-gray-900 dark:text-slate-100">International Foray</span>
+                                    <span class="text-sm text-gray-600 dark:text-slate-400">Front-end and back-end support for overseas expansion and acquisitions.</span>
                                 </li>
-                                <li class="border-l-2 border-gray-200 pl-4">
-                                    <span class="block font-semibold text-gray-900">Strategic Sourcing</span>
-                                    <span class="text-sm text-gray-600">Sourcing and negotiation platforms for key supplier relationships.</span>
+                                <li class="border-l-2 border-gray-200 dark:border-slate-700 pl-4">
+                                    <span class="block font-semibold text-gray-900 dark:text-slate-100">Strategic Sourcing</span>
+                                    <span class="text-sm text-gray-600 dark:text-slate-400">Sourcing and negotiation platforms for key supplier relationships.</span>
                                 </li>
-                                <li class="border-l-2 border-gray-200 pl-4">
-                                    <span class="block font-semibold text-gray-900">ESG &amp; Social Impact</span>
-                                    <span class="text-sm text-gray-600">ESG strategy and execution, and social impact advisory.</span>
+                                <li class="border-l-2 border-gray-200 dark:border-slate-700 pl-4">
+                                    <span class="block font-semibold text-gray-900 dark:text-slate-100">ESG &amp; Social Impact</span>
+                                    <span class="text-sm text-gray-600 dark:text-slate-400">ESG strategy and execution, and social impact advisory.</span>
                                 </li>
-                                <li class="border-l-2 border-gray-200 pl-4">
-                                    <span class="block font-semibold text-gray-900">Tax &amp; Legal Support</span>
-                                    <span class="text-sm text-gray-600">Direct and indirect tax strategy and compliance, and assistance on critical legal issues.</span>
+                                <li class="border-l-2 border-gray-200 dark:border-slate-700 pl-4">
+                                    <span class="block font-semibold text-gray-900 dark:text-slate-100">Tax &amp; Legal Support</span>
+                                    <span class="text-sm text-gray-600 dark:text-slate-400">Direct and indirect tax strategy and compliance, and assistance on critical legal issues.</span>
                                 </li>
                             </ul>
                         </div>
                         <div id="treasury-content" role="tabpanel" aria-labelledby="treasury-tab" tabindex="0" class="service-panel">
                             <h3 class="text-2xl font-bold mb-4">Treasury Management / Growth Capital</h3>
-                            <p class="text-gray-700">We support promoters and family offices in managing capital and risk with the same discipline applied to operating decisions. This spans wealth management, hedging and debt syndication.</p>
+                            <p class="text-gray-700 dark:text-slate-300">We support promoters and family offices in managing capital and risk with the same discipline applied to operating decisions. This spans wealth management, hedging and debt syndication.</p>
                             <ul class="mt-6 grid sm:grid-cols-2 gap-x-8 gap-y-4">
-                                <li class="border-l-2 border-gray-200 pl-4">
-                                    <span class="block font-semibold text-gray-900">Family Office</span>
-                                    <span class="text-sm text-gray-600">Family office set-up and wealth management.</span>
+                                <li class="border-l-2 border-gray-200 dark:border-slate-700 pl-4">
+                                    <span class="block font-semibold text-gray-900 dark:text-slate-100">Family Office</span>
+                                    <span class="text-sm text-gray-600 dark:text-slate-400">Family office set-up and wealth management.</span>
                                 </li>
-                                <li class="border-l-2 border-gray-200 pl-4">
-                                    <span class="block font-semibold text-gray-900">Hedging Strategy</span>
-                                    <span class="text-sm text-gray-600">Hedging against interest rate and exchange rate movements.</span>
+                                <li class="border-l-2 border-gray-200 dark:border-slate-700 pl-4">
+                                    <span class="block font-semibold text-gray-900 dark:text-slate-100">Hedging Strategy</span>
+                                    <span class="text-sm text-gray-600 dark:text-slate-400">Hedging against interest rate and exchange rate movements.</span>
                                 </li>
-                                <li class="border-l-2 border-gray-200 pl-4">
-                                    <span class="block font-semibold text-gray-900">Debt Syndication</span>
-                                    <span class="text-sm text-gray-600">Debt syndication from banks and NBFCs.</span>
+                                <li class="border-l-2 border-gray-200 dark:border-slate-700 pl-4">
+                                    <span class="block font-semibold text-gray-900 dark:text-slate-100">Debt Syndication</span>
+                                    <span class="text-sm text-gray-600 dark:text-slate-400">Debt syndication from banks and NBFCs.</span>
                                 </li>
-                                <li class="border-l-2 border-gray-200 pl-4">
-                                    <span class="block font-semibold text-gray-900">Risk Mitigation</span>
-                                    <span class="text-sm text-gray-600">Identification, assessment and mitigation of financial risk.</span>
+                                <li class="border-l-2 border-gray-200 dark:border-slate-700 pl-4">
+                                    <span class="block font-semibold text-gray-900 dark:text-slate-100">Risk Mitigation</span>
+                                    <span class="text-sm text-gray-600 dark:text-slate-400">Identification, assessment and mitigation of financial risk.</span>
                                 </li>
                             </ul>
                         </div>
@@ -470,24 +498,24 @@
         <section id="why-us" class="py-24">
             <div class="text-center mb-16">
                 <h2 class="text-3xl md:text-4xl font-bold">A Legacy of Excellence and Expertise</h2>
-                <p class="mt-4 text-gray-600 max-w-3xl mx-auto">With 31 years of delivering results, we offer more than just advice; we offer a partnership for success.</p>
+                <p class="mt-4 text-gray-600 dark:text-slate-400 max-w-3xl mx-auto">With 31 years of delivering results, we offer more than just advice; we offer a partnership for success.</p>
             </div>
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                <div class="bg-white dark:bg-slate-900 p-6 rounded-lg shadow-md border border-gray-100 dark:border-slate-800 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                     <h3 class="text-xl font-semibold mb-2">Hands-On Partnership</h3>
-                    <p class="text-gray-600">We don't just advise; we partner and handhold. We roll up our sleeves and work with your teams.</p>
+                    <p class="text-gray-600 dark:text-slate-400">We don't just advise; we partner and handhold. We roll up our sleeves and work with your teams.</p>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                <div class="bg-white dark:bg-slate-900 p-6 rounded-lg shadow-md border border-gray-100 dark:border-slate-800 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                     <h3 class="text-xl font-semibold mb-2">Data-Driven Decisions</h3>
-                    <p class="text-gray-600">We help bring in the discipline of making critical business decisions based on reliable data and insights.</p>
+                    <p class="text-gray-600 dark:text-slate-400">We help bring in the discipline of making critical business decisions based on reliable data and insights.</p>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                <div class="bg-white dark:bg-slate-900 p-6 rounded-lg shadow-md border border-gray-100 dark:border-slate-800 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                     <h3 class="text-xl font-semibold mb-2">Enduring Solutions</h3>
-                    <p class="text-gray-600">Our goal is to deliver solutions that are not only effective today but are sustainable and enduring for the future.</p>
+                    <p class="text-gray-600 dark:text-slate-400">Our goal is to deliver solutions that are not only effective today but are sustainable and enduring for the future.</p>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                <div class="bg-white dark:bg-slate-900 p-6 rounded-lg shadow-md border border-gray-100 dark:border-slate-800 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                     <h3 class="text-xl font-semibold mb-2">Risk Minimization</h3>
-                    <p class="text-gray-600">We help you proactively identify and build frameworks to minimize organizational and financial risk.</p>
+                    <p class="text-gray-600 dark:text-slate-400">We help you proactively identify and build frameworks to minimize organizational and financial risk.</p>
                 </div>
             </div>
         </section>
@@ -496,35 +524,35 @@
         <section id="track-record" class="py-24">
             <div class="text-center mb-16">
                 <h2 class="text-3xl md:text-4xl font-bold">Track Record</h2>
-                <p class="mt-4 text-gray-600 max-w-3xl mx-auto">Before founding MS Advisors, Mitanshu Shah spent 31 years building this experience in senior finance and leadership roles.</p>
+                <p class="mt-4 text-gray-600 dark:text-slate-400 max-w-3xl mx-auto">Before founding MS Advisors, Mitanshu Shah spent 31 years building this experience in senior finance and leadership roles.</p>
             </div>
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-100 hover:shadow-lg transition-shadow duration-300">
+                <div class="bg-white dark:bg-slate-900 p-6 rounded-lg shadow-md border border-gray-100 dark:border-slate-800 hover:shadow-lg transition-shadow duration-300">
                     <h3 class="text-lg font-semibold mb-2">20x Sales Growth</h3>
-                    <p class="text-gray-600 text-sm">Part of the leadership team that spearheaded profitable sales growth of 20x over 18 years at a previous organisation.</p>
+                    <p class="text-gray-600 dark:text-slate-400 text-sm">Part of the leadership team that spearheaded profitable sales growth of 20x over 18 years at a previous organisation.</p>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-100 hover:shadow-lg transition-shadow duration-300">
+                <div class="bg-white dark:bg-slate-900 p-6 rounded-lg shadow-md border border-gray-100 dark:border-slate-800 hover:shadow-lg transition-shadow duration-300">
                     <h3 class="text-lg font-semibold mb-2">Public Market Fundraising</h3>
-                    <p class="text-gray-600 text-sm">Raised equity through an IPO and subsequent QIP and preferential issues.</p>
+                    <p class="text-gray-600 dark:text-slate-400 text-sm">Raised equity through an IPO and subsequent QIP and preferential issues.</p>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-100 hover:shadow-lg transition-shadow duration-300">
+                <div class="bg-white dark:bg-slate-900 p-6 rounded-lg shadow-md border border-gray-100 dark:border-slate-800 hover:shadow-lg transition-shadow duration-300">
                     <h3 class="text-lg font-semibold mb-2">M&amp;A and JV Transactions</h3>
-                    <p class="text-gray-600 text-sm">Led several M&amp;A, disinvestment and joint venture transactions, both onshore and offshore.</p>
+                    <p class="text-gray-600 dark:text-slate-400 text-sm">Led several M&amp;A, disinvestment and joint venture transactions, both onshore and offshore.</p>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-100 hover:shadow-lg transition-shadow duration-300">
+                <div class="bg-white dark:bg-slate-900 p-6 rounded-lg shadow-md border border-gray-100 dark:border-slate-800 hover:shadow-lg transition-shadow duration-300">
                     <h3 class="text-lg font-semibold mb-2">Capital Allocation Strategy</h3>
-                    <p class="text-gray-600 text-sm">Planned and executed a capital allocation strategy that generated an industry-beating CAGR.</p>
+                    <p class="text-gray-600 dark:text-slate-400 text-sm">Planned and executed a capital allocation strategy that generated an industry-beating CAGR.</p>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-100 hover:shadow-lg transition-shadow duration-300">
+                <div class="bg-white dark:bg-slate-900 p-6 rounded-lg shadow-md border border-gray-100 dark:border-slate-800 hover:shadow-lg transition-shadow duration-300">
                     <h3 class="text-lg font-semibold mb-2">Institutional Investor Relationships</h3>
-                    <p class="text-gray-600 text-sm">Built relationships across large MNC and private banks, PE funds and AMCs, and secured stock coverage from marquee funds and broking houses.</p>
+                    <p class="text-gray-600 dark:text-slate-400 text-sm">Built relationships across large MNC and private banks, PE funds and AMCs, and secured stock coverage from marquee funds and broking houses.</p>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-100 hover:shadow-lg transition-shadow duration-300">
+                <div class="bg-white dark:bg-slate-900 p-6 rounded-lg shadow-md border border-gray-100 dark:border-slate-800 hover:shadow-lg transition-shadow duration-300">
                     <h3 class="text-lg font-semibold mb-2">Risk and Treasury Systems</h3>
-                    <p class="text-gray-600 text-sm">Built risk management matrices including the insurance portfolio, and implemented FX management tools so global treasury ran as a profit centre.</p>
+                    <p class="text-gray-600 dark:text-slate-400 text-sm">Built risk management matrices including the insurance portfolio, and implemented FX management tools so global treasury ran as a profit centre.</p>
                 </div>
             </div>
-            <p class="mt-10 text-center text-sm text-gray-500 max-w-3xl mx-auto">The achievements above were delivered across the founder&rsquo;s prior corporate roles, not as MS Advisors mandates.</p>
+            <p class="mt-10 text-center text-sm text-gray-500 dark:text-slate-400 max-w-3xl mx-auto">The achievements above were delivered across the founder&rsquo;s prior corporate roles, not as MS Advisors mandates.</p>
         </section>
 
         <!-- Section 7: Contact Us -->
@@ -544,7 +572,7 @@
 
     </main>
 
-    <footer class="bg-gray-800 text-white py-6">
+    <footer class="bg-gray-800 dark:bg-slate-900 dark:border-t dark:border-slate-800 text-white py-6">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-400">
             <p>&copy; 2026 MS Advisors. All Rights Reserved.</p>
         </div>
@@ -552,6 +580,35 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // --- Theme toggle ---
+            const themeToggle = document.getElementById('theme-toggle');
+            const root = document.documentElement;
+
+            const syncThemeButton = () => {
+                const isDark = root.classList.contains('dark');
+                themeToggle.setAttribute('aria-pressed', String(isDark));
+                themeToggle.setAttribute('aria-label',
+                    isDark ? 'Switch to light theme' : 'Switch to dark theme');
+            };
+            syncThemeButton();
+
+            themeToggle.addEventListener('click', () => {
+                const isDark = root.classList.toggle('dark');
+                try {
+                    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+                } catch (e) { /* private mode: theme just won't persist */ }
+                syncThemeButton();
+            });
+
+            // Follow the OS only while the visitor hasn't picked a theme themselves.
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+                let stored = null;
+                try { stored = localStorage.getItem('theme'); } catch (err) { /* ignore */ }
+                if (stored) return;
+                root.classList.toggle('dark', e.matches);
+                syncThemeButton();
+            });
+
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');
 
