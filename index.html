@@ -84,6 +84,28 @@
             text-transform: uppercase;
             letter-spacing: 0.2em;
         }
+        /* All service panels share a single grid cell, so the container is
+           sized to the tallest panel and its height never changes when the
+           selection moves. Inactive panels stay in flow (visibility, not
+           display) to keep that height stable. */
+        #service-content {
+            display: grid;
+        }
+        .service-panel {
+            grid-area: 1 / 1;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+        .service-panel.is-active {
+            visibility: visible;
+            opacity: 1;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .service-panel {
+                transition: none;
+            }
+        }
         .active-service {
             background-color: #1e3a8a;
             color: #ffffff;
@@ -305,7 +327,7 @@
                 </div>
                 <div class="w-full md:w-2/3 p-8 bg-gray-50 rounded-lg h-full flex items-start md:min-h-[400px]">
                     <div id="service-content" class="w-full">
-                            <div id="finance-content" role="tabpanel" aria-labelledby="finance-tab" tabindex="0" class="service-panel">
+                            <div id="finance-content" role="tabpanel" aria-labelledby="finance-tab" tabindex="0" class="service-panel is-active">
                             <h3 class="text-2xl font-bold mb-4">Transformation / Business Finance</h3>
                             <p class="text-gray-700">We help promoters build a business finance function that controls and lowers cost, brings agility and competitiveness, and instils the discipline of deciding on reliable data. The focus is on impactful dashboards, automation and transformational cost reduction, not incremental fixes.</p>
                             <ul class="mt-6 grid sm:grid-cols-2 gap-x-8 gap-y-4">
@@ -331,7 +353,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <div id="structuring-content" role="tabpanel" aria-labelledby="structuring-tab" tabindex="0" class="service-panel hidden">
+                        <div id="structuring-content" role="tabpanel" aria-labelledby="structuring-tab" tabindex="0" class="service-panel">
                             <h3 class="text-2xl font-bold mb-4">Financial Structuring / M&amp;A</h3>
                             <p class="text-gray-700">We advise promoters and boards through the capital-raising and ownership decisions that define a company&rsquo;s next stage, from listing to acquisition to expansion financing. Each mandate is led end to end, from structuring through negotiation to close.</p>
                             <ul class="mt-6 grid sm:grid-cols-2 gap-x-8 gap-y-4">
@@ -357,7 +379,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <div id="ir-content" role="tabpanel" aria-labelledby="ir-tab" tabindex="0" class="service-panel hidden">
+                        <div id="ir-content" role="tabpanel" aria-labelledby="ir-tab" tabindex="0" class="service-panel">
                             <h3 class="text-2xl font-bold mb-4">Investor Relations</h3>
                             <p class="text-gray-700">We help listed companies strategise and operationalise their investor relations programme, benchmarked against best practice. The goal is a cap table built on quality institutional ownership and a communication cadence that investors trust.</p>
                             <ul class="mt-6 grid sm:grid-cols-2 gap-x-8 gap-y-4">
@@ -387,7 +409,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <div id="partnering-content" role="tabpanel" aria-labelledby="partnering-tab" tabindex="0" class="service-panel hidden">
+                        <div id="partnering-content" role="tabpanel" aria-labelledby="partnering-tab" tabindex="0" class="service-panel">
                             <h3 class="text-2xl font-bold mb-4">Strategic Partnering with Promoters</h3>
                             <p class="text-gray-700">For promoters who need a senior finance partner without a full-time hire, we operate as a virtual CFO&rsquo;s office, handholding through projects, transactions and compliance so the founder can stay focused on the business.</p>
                             <ul class="mt-6 grid sm:grid-cols-2 gap-x-8 gap-y-4">
@@ -417,7 +439,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <div id="treasury-content" role="tabpanel" aria-labelledby="treasury-tab" tabindex="0" class="service-panel hidden">
+                        <div id="treasury-content" role="tabpanel" aria-labelledby="treasury-tab" tabindex="0" class="service-panel">
                             <h3 class="text-2xl font-bold mb-4">Treasury Management / Growth Capital</h3>
                             <p class="text-gray-700">We support promoters and family offices in managing capital and risk with the same discipline applied to operating decisions. This spans wealth management, hedging and debt syndication.</p>
                             <ul class="mt-6 grid sm:grid-cols-2 gap-x-8 gap-y-4">
@@ -560,7 +582,7 @@
                 });
 
                 servicePanels.forEach(panel => {
-                    panel.classList.toggle('hidden', panel.id !== `${service}-content`);
+                    panel.classList.toggle('is-active', panel.id === `${service}-content`);
                 });
             };
 
