@@ -41,16 +41,6 @@
   }
 }
 </script>
-<script>
-/* Stamp only an explicit stored choice, so an un-stamped document still
-   follows the OS (and, inside a host that themes it, the host). */
-(function () {
-  try {
-    var t = localStorage.getItem('ms-theme');
-    if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
-  } catch (e) {}
-})();
-</script>
 <style>
 @font-face {
   font-family: 'IBM Plex Mono';
@@ -311,17 +301,6 @@ ul, ol, dl, dd { margin: 0; padding: 0; list-style: none; }
 }
 .icon-btn:hover { color: var(--ink); border-color: var(--rule-2); }
 .icon-btn svg { width: 18px; height: 18px; }
-[data-theme="dark"] .i-moon, :root:not([data-theme="light"]) .i-moon { display: block; }
-.i-sun { display: none; }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .i-moon { display: none; }
-  :root:not([data-theme="light"]) .i-sun { display: block; }
-}
-:root[data-theme="dark"] .i-moon { display: none; }
-:root[data-theme="dark"] .i-sun { display: block; }
-:root[data-theme="light"] .i-moon { display: block; }
-:root[data-theme="light"] .i-sun { display: none; }
-
 .menu-btn { display: inline-grid; }
 .drawer { display: none; border-top: 1px solid var(--rule); background: var(--paper); }
 .drawer.is-open { display: block; }
@@ -332,7 +311,7 @@ ul, ol, dl, dd { margin: 0; padding: 0; list-style: none; }
 .drawer a:last-child { border-bottom: 0; }
 @media (min-width: 900px) {
   .nav { display: flex; }
-  .menu-btn { display: none; }
+  .masthead__act { display: none; }
   .drawer { display: none !important; }
 }
 
@@ -448,21 +427,30 @@ a.tombstone:hover .tombstone__more svg { transform: translateX(3px); }
 /* ---------- deal detail ---------- */
 .deal { border: 1px solid var(--rule-2); background: var(--surface); }
 .deal + .deal { margin-top: 1.5rem; }
-.deal__grid { display: grid; }
-@media (min-width: 1000px) { .deal__grid { grid-template-columns: 7fr 5fr; } }
+.deal__head { border-bottom: 1px solid var(--rule); }
+.deal__headtext { padding: clamp(1.75rem, 3.5vw, 3rem); }
+.deal__media {
+  background: var(--paper-deep); border-bottom: 1px solid var(--rule);
+  padding: clamp(1.5rem, 3vw, 2.25rem); display: grid; place-items: center;
+}
+.deal__media img { border: 1px solid var(--rule-2); max-height: 22rem; width: auto; }
+@media (min-width: 900px) {
+  /* Image sits beside the title block; the narrow view keeps it on top,
+     which is why it comes first in the source. */
+  .deal__head { display: grid; grid-template-columns: 7fr 5fr; }
+  .deal__media { grid-area: 1 / 2; border-bottom: 0; border-left: 1px solid var(--rule); }
+  .deal__headtext { grid-area: 1 / 1; align-self: center; }
+}
 .deal__body { padding: clamp(1.75rem, 3.5vw, 3rem); }
 .deal--split .deal__body { display: grid; gap: 2rem clamp(2rem, 4vw, 3.5rem); }
-@media (min-width: 900px) { .deal--split .deal__body { grid-template-columns: 5fr 7fr; } }
-.deal__aside {
-  border-top: 1px solid var(--rule); background: var(--paper-deep);
-  padding: clamp(1.75rem, 3vw, 2.5rem); display: grid; place-items: center;
-}
-@media (min-width: 1000px) { .deal__aside { border-top: 0; border-left: 1px solid var(--rule); } }
-.deal__aside img { border: 1px solid var(--rule-2); }
+@media (min-width: 900px) { .deal--split .deal__body { grid-template-columns: 1fr 1fr; } }
+.deal__prose { margin-top: 2rem; display: grid; gap: 1rem; }
+@media (min-width: 1000px) { .deal__prose { grid-template-columns: 1fr 1fr; gap: 1rem 3rem; } }
 .deal__figs {
   display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem 1rem;
   margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--rule);
 }
+.deal__figs--lead { margin-top: 0; padding-top: 0; border-top: 0; }
 @media (min-width: 640px) { .deal__figs { grid-template-columns: repeat(4, 1fr); } }
 .deal__fig strong {
   display: block; font-family: var(--f-display); font-weight: 500;
@@ -658,10 +646,6 @@ a.tombstone:hover .tombstone__more svg { transform: translateX(3px); }
       <a href="#contact">Contact</a>
     </nav>
     <div class="masthead__act">
-      <button class="icon-btn" id="theme-btn" type="button" aria-pressed="false" aria-label="Switch to dark theme">
-        <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
-        <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-      </button>
       <button class="icon-btn menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="drawer" aria-label="Open menu">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></svg>
       </button>
@@ -740,31 +724,35 @@ a.tombstone:hover .tombstone__more svg { transform: translateX(3px); }
     </div>
 
     <article class="deal" id="kronox" data-reveal>
-      <div class="deal__grid">
-        <div class="deal__body">
+      <div class="deal__head">
+        <div class="deal__media">
+          <img src="assets/deals/kronox-indoborax-announcement.jpg" width="1200" height="1200" loading="lazy" decoding="async" alt="Deal announcement: MS Advisors advised the promoters of Kronox Lab Sciences Limited on the divestment of a 64.26% controlling stake to Indo Borax &amp; Chemicals Limited">
+        </div>
+        <div class="deal__headtext">
           <p class="eyebrow">Change of control &mdash; listed to listed</p>
           <h3 class="display h2" style="margin-top:.75rem">Kronox Lab Sciences <span style="color:var(--ink-3);font-weight:400">/</span> Indo Borax &amp; Chemicals</h3>
           <p class="body" style="margin-top:1.25rem;font-weight:500;color:var(--ink)">MS Advisors, with CNK &amp; Associates LLP, acted as exclusive Strategic and M&amp;A Advisors to the promoters of Kronox Lab Sciences Limited.</p>
           <p class="small num" style="margin-top:.6rem;font-family:var(--f-mono)">NSE: KRONOX &middot; BSE: 544187 &nbsp;&rarr;&nbsp; NSE: INDOBORAX &middot; BSE: 524342</p>
-
-          <div class="deal__figs">
-            <div class="deal__fig"><strong class="num">64.26%</strong><span>Controlling stake divested</span></div>
-            <div class="deal__fig"><strong class="num">9.95%</strong><span>Promoter stake retained</span></div>
-            <div class="deal__fig"><strong class="num">20 Aug 2026</strong><span>Agreement signed</span></div>
-            <div class="deal__fig"><strong class="num">~185</strong><span>Products in Kronox&rsquo;s portfolio</span></div>
-          </div>
-
-          <p class="body" style="margin-top:2rem">Kronox Lab Sciences was built from 2008 by Mr Ketan Ramani, Mr Pritesh Ramani and Mr Jogindersingh Jaswal into a specialty fine chemicals manufacturer serving pharmaceutical, nutraceutical and biotech customers, and listed on NSE and BSE in 2024. Its promoters have divested a 64.26% controlling stake to Indo Borax &amp; Chemicals Limited, triggering a mandatory open offer to public shareholders under the SEBI (SAST) Regulations.</p>
-          <p class="body" style="margin-top:1rem">MS Advisors led the mandate through a six-month process alongside CNK &amp; Associates LLP, Sterling Associates as legal counsel, and the acquirer&rsquo;s advisers &mdash; Sidwim, Deloitte and Cyril Amarchand Mangaldas. The promoters retain a 9.95% stake and will support a structured transition, passing the business to a well-capitalised listed group with complementary operations positioned to fund its next phase of growth.</p>
-
-          <blockquote class="pull">
-            &ldquo;When founders of that calibre transition control, price is only one variable. Stewardship of the institution is the other, and it is the harder one to underwrite.&rdquo;
-            <footer>Mitanshu Shah &middot; Founder &amp; CEO</footer>
-          </blockquote>
         </div>
-        <div class="deal__aside">
-          <img src="assets/deals/kronox-indoborax-announcement.jpg" width="1200" height="1200" loading="lazy" decoding="async" alt="Deal announcement: MS Advisors advised the promoters of Kronox Lab Sciences Limited on the divestment of a 64.26% controlling stake to Indo Borax &amp; Chemicals Limited">
+      </div>
+
+      <div class="deal__body">
+        <div class="deal__figs deal__figs--lead">
+          <div class="deal__fig"><strong class="num">64.26%</strong><span>Controlling stake divested</span></div>
+          <div class="deal__fig"><strong class="num">9.95%</strong><span>Promoter stake retained</span></div>
+          <div class="deal__fig"><strong class="num">20 Aug 2026</strong><span>Agreement signed</span></div>
+          <div class="deal__fig"><strong class="num">~185</strong><span>Products in Kronox&rsquo;s portfolio</span></div>
         </div>
+
+        <div class="deal__prose">
+          <p class="body">Kronox Lab Sciences was built from 2008 by Mr Ketan Ramani, Mr Pritesh Ramani and Mr Jogindersingh Jaswal into a specialty fine chemicals manufacturer serving pharmaceutical, nutraceutical and biotech customers, and listed on NSE and BSE in 2024. Its promoters have divested a 64.26% controlling stake to Indo Borax &amp; Chemicals Limited, triggering a mandatory open offer to public shareholders under the SEBI (SAST) Regulations.</p>
+          <p class="body">MS Advisors led the mandate through a six-month process alongside CNK &amp; Associates LLP, Sterling Associates as legal counsel, and the acquirer&rsquo;s advisers &mdash; Sidwim, Deloitte and Cyril Amarchand Mangaldas. The promoters retain a 9.95% stake and will support a structured transition, passing the business to a well-capitalised listed group with complementary operations positioned to fund its next phase of growth.</p>
+        </div>
+
+        <blockquote class="pull">
+          &ldquo;When founders of that calibre transition control, price is only one variable. Stewardship of the institution is the other, and it is the harder one to underwrite.&rdquo;
+          <footer>Mitanshu Shah &middot; Founder &amp; CEO</footer>
+        </blockquote>
       </div>
     </article>
 
@@ -1058,27 +1046,6 @@ a.tombstone:hover .tombstone__more svg { transform: translateX(3px); }
 (function () {
   var root = document.documentElement;
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
-
-  /* ---- theme ---- */
-  var themeBtn = document.getElementById('theme-btn');
-  function isDark() {
-    var stamped = root.getAttribute('data-theme');
-    if (stamped) return stamped === 'dark';
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
-  }
-  function syncTheme() {
-    var dark = isDark();
-    themeBtn.setAttribute('aria-pressed', String(dark));
-    themeBtn.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
-  }
-  themeBtn.addEventListener('click', function () {
-    var next = isDark() ? 'light' : 'dark';
-    root.setAttribute('data-theme', next);
-    try { localStorage.setItem('ms-theme', next); } catch (e) {}
-    syncTheme();
-  });
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', syncTheme);
-  syncTheme();
 
   /* ---- mobile drawer ---- */
   var menuBtn = document.getElementById('menu-btn');
