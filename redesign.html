@@ -151,9 +151,10 @@
   --f-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
   --f-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  --wrap: 1180px;
+  --wrap: 1200px;
   --gut: clamp(1.25rem, 4vw, 3rem);
-  --sec: clamp(4.5rem, 9vw, 7.5rem);
+  --sec: clamp(4.5rem, 9vw, 7rem);
+  --head-h: 76px;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
@@ -199,17 +200,12 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: 92px; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 body {
-  margin: 0;
-  background: var(--paper);
-  color: var(--ink);
-  font-family: var(--f-sans);
-  font-size: 17px;
-  line-height: 1.65;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
+  margin: 0; background: var(--paper); color: var(--ink);
+  font-family: var(--f-sans); font-size: 17px; line-height: 1.65;
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
 }
 img { max-width: 100%; height: auto; display: block; }
 a { color: inherit; }
@@ -221,73 +217,39 @@ ul, ol, dl, dd { margin: 0; padding: 0; list-style: none; }
 .wrap { max-width: var(--wrap); margin-inline: auto; padding-inline: var(--gut); }
 .measure { max-width: 64ch; }
 .num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
-
 .eyebrow {
-  font-family: var(--f-mono);
-  font-size: .6875rem;
-  letter-spacing: .16em;
-  text-transform: uppercase;
-  color: var(--navy-ink);
-  margin: 0;
+  font-family: var(--f-mono); font-size: .6875rem; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--navy-ink); margin: 0;
 }
-.eyebrow--quiet { color: var(--ink-3); }
-
-.display {
-  font-family: var(--f-display);
-  font-weight: 500;
-  letter-spacing: -.015em;
-  line-height: 1.12;
-}
+.display { font-family: var(--f-display); font-weight: 500; letter-spacing: -.015em; line-height: 1.12; }
 .h1 { font-size: clamp(2.25rem, 4.8vw, 3.6rem); }
-.h2 { font-size: clamp(1.75rem, 3.2vw, 2.5rem); line-height: 1.16; }
+.h2 { font-size: clamp(1.75rem, 3.2vw, 2.4rem); line-height: 1.16; }
 .h3 { font-size: clamp(1.25rem, 2vw, 1.5rem); line-height: 1.25; }
 .lede { font-size: clamp(1.0625rem, 1.4vw, 1.1875rem); color: var(--ink-2); line-height: 1.6; }
 .body { color: var(--ink-2); }
 .small { font-size: .875rem; color: var(--ink-3); line-height: 1.6; }
-
-:where(a, button, [tabindex]):focus-visible {
-  outline: 2px solid var(--focus);
-  outline-offset: 3px;
-  border-radius: 2px;
-}
+:where(a, button, [tabindex]):focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 2px; }
 
 /* ---------- header ---------- */
 .progress {
   position: fixed; inset: 0 auto auto 0; height: 2px; width: 100%;
-  transform: scaleX(0); transform-origin: 0 50%;
-  background: var(--navy); z-index: 90; pointer-events: none;
+  transform: scaleX(0); transform-origin: 0 50%; background: var(--navy); z-index: 90; pointer-events: none;
 }
 .masthead {
   position: sticky; top: 0; z-index: 80;
   background: color-mix(in srgb, var(--paper) 94%, transparent);
   backdrop-filter: saturate(1.4) blur(12px);
-  border-bottom: 1px solid transparent;
-  transition: border-color .3s ease, background .3s ease;
+  border-bottom: 1px solid transparent; transition: border-color .3s ease;
 }
 .masthead.is-stuck { border-bottom-color: var(--rule); }
-.masthead__in {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 1.5rem; height: 76px;
-  transition: height .3s ease;
-}
+.masthead__in { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; height: var(--head-h); transition: height .3s ease; }
 .masthead.is-stuck .masthead__in { height: 64px; }
 .brand { display: inline-flex; align-items: center; gap: .7rem; text-decoration: none; }
 .brand svg { width: 30px; height: auto; flex: none; }
-.brand__name {
-  font-family: var(--f-display); font-size: 1.3rem; font-weight: 600;
-  letter-spacing: -.01em; color: var(--ink);
-}
-.brand__sub {
-  display: block; font-family: var(--f-mono); font-size: .625rem;
-  letter-spacing: .18em; text-transform: uppercase; color: var(--ink-3);
-  margin-top: -2px;
-}
-.nav { display: none; gap: 2rem; align-items: center; }
-.nav a {
-  position: relative; text-decoration: none; font-size: .9375rem;
-  color: var(--ink-2); padding-block: .35rem;
-  transition: color .2s ease;
-}
+.brand__name { font-family: var(--f-display); font-size: 1.3rem; font-weight: 600; letter-spacing: -.01em; color: var(--ink); }
+.brand__sub { display: block; font-family: var(--f-mono); font-size: .625rem; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-3); margin-top: -2px; }
+.nav { display: none; gap: 1.75rem; align-items: center; }
+.nav a { position: relative; text-decoration: none; font-size: .9375rem; color: var(--ink-2); padding-block: .35rem; transition: color .2s ease; }
 .nav a::after {
   content: ""; position: absolute; left: 0; bottom: 0; height: 1px; width: 100%;
   background: var(--navy-ink); transform: scaleX(0); transform-origin: 0 50%;
@@ -296,39 +258,30 @@ ul, ol, dl, dd { margin: 0; padding: 0; list-style: none; }
 .nav a:hover { color: var(--ink); }
 .nav a:hover::after, .nav a[aria-current="true"]::after { transform: scaleX(1); }
 .nav a[aria-current="true"] { color: var(--ink); }
-.masthead__act { display: flex; align-items: center; gap: .5rem; }
+.masthead__act { display: flex; align-items: center; }
 .icon-btn {
   display: inline-grid; place-items: center; width: 38px; height: 38px;
-  border: 1px solid transparent; border-radius: 2px; background: none;
-  color: var(--ink-2); cursor: pointer; transition: color .2s ease, border-color .2s ease;
+  border: 1px solid transparent; border-radius: 2px; background: none; color: var(--ink-2);
+  cursor: pointer; transition: color .2s ease, border-color .2s ease;
 }
 .icon-btn:hover { color: var(--ink); border-color: var(--rule-2); }
 .icon-btn svg { width: 18px; height: 18px; }
-.menu-btn { display: inline-grid; }
 .drawer { display: none; border-top: 1px solid var(--rule); background: var(--paper); }
 .drawer.is-open { display: block; }
-.drawer a {
-  display: block; padding: .85rem var(--gut); text-decoration: none;
-  color: var(--ink-2); border-bottom: 1px solid var(--rule); font-size: .9375rem;
-}
+.drawer a { display: block; padding: .85rem var(--gut); text-decoration: none; color: var(--ink-2); border-bottom: 1px solid var(--rule); font-size: .9375rem; }
 .drawer a:last-child { border-bottom: 0; }
-@media (min-width: 900px) {
+@media (min-width: 960px) {
   .nav { display: flex; }
   .masthead__act { display: none; }
   .drawer { display: none !important; }
 }
-
-.skip {
-  position: absolute; left: -9999px; top: 0; z-index: 100;
-  background: var(--navy); color: var(--on-navy); padding: .75rem 1rem;
-}
+.skip { position: absolute; left: -9999px; top: 0; z-index: 100; background: var(--navy); color: var(--on-navy); padding: .75rem 1rem; }
 .skip:focus { left: 0; }
 
 /* ---------- buttons ---------- */
 .btn {
-  display: inline-flex; align-items: center; gap: .6rem;
-  font-size: .9375rem; font-weight: 500; letter-spacing: .01em;
-  padding: .85rem 1.4rem; border-radius: 2px; text-decoration: none;
+  display: inline-flex; align-items: center; gap: .6rem; font-size: .9375rem; font-weight: 500;
+  letter-spacing: .01em; padding: .85rem 1.4rem; border-radius: 2px; text-decoration: none;
   border: 1px solid transparent; cursor: pointer;
   transition: background .2s ease, color .2s ease, border-color .2s ease, transform .2s ease;
 }
@@ -341,274 +294,199 @@ ul, ol, dl, dd { margin: 0; padding: 0; list-style: none; }
 .btn--onnavy { border-color: rgba(255,255,255,.4); color: var(--on-navy); }
 .btn--onnavy:hover { background: var(--on-navy); color: var(--navy); border-color: var(--on-navy); }
 
-/* ---------- section scaffolding ---------- */
+/* ---------- section + left rail ----------
+   Every section is a two-column spread: a rail on the left carrying the
+   label, heading and the section's bullets, and the content on the right.
+   The rail sticks while the content scrolls, so the reader always knows
+   which part of the firm they are in. */
 .section { padding-block: var(--sec); border-top: 1px solid var(--rule); }
-.section--flush { border-top: 0; }
-.sec-head { display: grid; gap: 1rem 3rem; margin-bottom: clamp(2.5rem, 5vw, 3.5rem); }
-@media (min-width: 900px) {
-  .sec-head { grid-template-columns: 5fr 7fr; align-items: end; }
-  .sec-head__aside { grid-column: 2; }
+.spread { display: grid; gap: clamp(2rem, 4vw, 3rem); }
+@media (min-width: 1000px) {
+  .spread { grid-template-columns: 4fr 8fr; gap: clamp(3rem, 5vw, 5rem); align-items: start; }
+  .rail { position: sticky; top: calc(var(--head-h) + 2.5rem); }
 }
-.sec-head h2 { margin-top: .6rem; }
+.rail h2 { margin-top: .75rem; font-size: clamp(1.6rem, 2.4vw, 2.05rem); }
+.rail__note { margin-top: 1.25rem; font-size: .9375rem; color: var(--ink-3); line-height: 1.55; max-width: 32ch; }
+
+/* left-side bullets: a marker, a label, and a rule that runs the column */
+.bullets { margin-top: 2rem; border-top: 1px solid var(--rule); }
+.bullets li { border-bottom: 1px solid var(--rule); }
+.bullets > li > * , .bullets__item {
+  display: flex; align-items: baseline; gap: .85rem; width: 100%;
+  padding: .85rem .5rem .85rem 0; text-align: left;
+  font-family: var(--f-sans); font-size: .9375rem; color: var(--ink-2);
+  background: none; border: 0; line-height: 1.4;
+}
+.bullets__mark {
+  flex: none; width: 6px; height: 6px; margin-top: .5rem; background: var(--rule-2);
+  transition: background .25s ease, transform .25s ease;
+}
+button.bullets__item { cursor: pointer; transition: color .2s ease, padding-left .25s cubic-bezier(.2,.7,.3,1); }
+button.bullets__item:hover { color: var(--ink); }
+button.bullets__item:hover .bullets__mark { background: var(--navy); }
+.bullets__item[aria-selected="true"] { color: var(--ink); font-weight: 500; padding-left: .4rem; }
+.bullets__item[aria-selected="true"] .bullets__mark { background: var(--navy); transform: scale(1.35); }
+.bullets--plain .bullets__mark { background: var(--navy); }
 
 /* ---------- hero ---------- */
-.hero { padding-top: clamp(3rem, 7vw, 5.5rem); padding-bottom: clamp(3rem, 6vw, 4.5rem); }
+.hero { padding-top: clamp(3rem, 7vw, 5rem); padding-bottom: clamp(3rem, 6vw, 4.5rem); }
 .hero__grid { display: grid; gap: clamp(2.5rem, 5vw, 4rem); }
 @media (min-width: 1000px) { .hero__grid { grid-template-columns: 1.05fr .95fr; align-items: start; } }
 .hero h1 { margin-top: 1.25rem; }
 .hero h1 em { font-style: italic; color: var(--navy-ink); }
 .hero__lede { margin-top: 1.5rem; max-width: 46ch; }
 .hero__cta { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 2.25rem; }
-@media (max-width: 520px) {
-  .hero__cta .btn { flex: 1 1 100%; justify-content: center; }
-}
+@media (max-width: 520px) { .hero__cta .btn { flex: 1 1 100%; justify-content: center; } }
 
 /* tombstone: the industry's own announcement form */
 .tombstone {
-  background: var(--surface); border: 1px solid var(--rule-2);
-  padding: clamp(1.5rem, 3vw, 2.25rem); box-shadow: var(--shadow);
-  transition: border-color .25s ease, transform .25s ease, box-shadow .25s ease;
+  background: var(--surface); border: 1px solid var(--rule-2); padding: clamp(1.5rem, 3vw, 2.25rem);
+  box-shadow: var(--shadow); transition: border-color .25s ease, transform .25s ease, box-shadow .25s ease;
 }
 a.tombstone { text-decoration: none; display: block; }
 a.tombstone:hover { border-color: var(--navy); transform: translateY(-2px); box-shadow: var(--shadow-up); }
-.tombstone__top {
-  display: flex; justify-content: space-between; align-items: baseline; gap: 1rem;
-  padding-bottom: 1rem; border-bottom: 1px solid var(--rule);
-}
-.tombstone__status {
-  font-family: var(--f-mono); font-size: .625rem; letter-spacing: .14em;
-  text-transform: uppercase; color: var(--ink-3);
-  display: inline-flex; align-items: center; gap: .45rem;
-}
+.tombstone__top { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--rule); }
+.tombstone__status { font-family: var(--f-mono); font-size: .625rem; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); display: inline-flex; align-items: center; gap: .45rem; }
 .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--navy); display: inline-block; }
 .tombstone__party { margin-top: 1.5rem; }
-.tombstone__party .h3 { font-family: var(--f-display); }
-.tombstone__arrow {
-  display: flex; align-items: center; gap: .6rem; margin: .9rem 0;
-  font-family: var(--f-mono); font-size: .75rem; letter-spacing: .06em; color: var(--navy-ink);
-}
+.tombstone__arrow { display: flex; align-items: center; gap: .6rem; margin: .9rem 0; font-family: var(--f-mono); font-size: .75rem; letter-spacing: .06em; color: var(--navy-ink); }
 .tombstone__arrow i { height: 1px; background: var(--rule-2); flex: 1 1 auto; }
 .tombstone__arrow i:first-child { flex: 0 0 1.5rem; }
-.tombstone__arrow b {
-  width: 0; height: 0; flex: none; margin-left: -.5rem;
-  border-left: 5px solid var(--navy-ink);
-  border-top: 3.5px solid transparent; border-bottom: 3.5px solid transparent;
-}
-.tombstone__role {
-  margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--rule);
-  font-size: .9375rem; color: var(--ink-2);
-}
-.tombstone__ticker {
-  margin-top: .75rem; font-family: var(--f-mono); font-size: .75rem;
-  color: var(--ink-3); letter-spacing: .02em;
-}
-.tombstone__more {
-  margin-top: 1.5rem; display: inline-flex; align-items: center; gap: .5rem;
-  font-size: .875rem; font-weight: 500; color: var(--navy-ink);
-}
-a.tombstone:hover .tombstone__more svg { transform: translateX(3px); }
+.tombstone__arrow b { width: 0; height: 0; flex: none; margin-left: -.5rem; border-left: 5px solid var(--navy-ink); border-top: 3.5px solid transparent; border-bottom: 3.5px solid transparent; }
+.tombstone__role { margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--rule); font-size: .9375rem; color: var(--ink-2); }
+.tombstone__ticker { margin-top: .75rem; font-family: var(--f-mono); font-size: .75rem; color: var(--ink-3); letter-spacing: .02em; }
+.tombstone__more { margin-top: 1.5rem; display: inline-flex; align-items: center; gap: .5rem; font-size: .875rem; font-weight: 500; color: var(--navy-ink); }
 .tombstone__more svg { width: 14px; height: 14px; transition: transform .25s cubic-bezier(.2,.7,.3,1); }
+a.tombstone:hover .tombstone__more svg { transform: translateX(3px); }
 
 /* ---------- figure strip ---------- */
-.figures {
-  display: grid; grid-template-columns: repeat(2, 1fr);
-  border-top: 1px solid var(--rule);
-}
+.figures { display: grid; grid-template-columns: repeat(2, 1fr); border-top: 1px solid var(--rule); }
 @media (min-width: 800px) { .figures { grid-template-columns: repeat(4, 1fr); } }
-.figure { padding: 1.75rem 0; border-bottom: 1px solid var(--rule); padding-right: 1.5rem; }
+.figure { padding: 1.75rem 1.5rem 1.75rem 0; border-bottom: 1px solid var(--rule); }
 @media (min-width: 800px) {
   .figure { border-bottom: 0; border-left: 1px solid var(--rule); padding-left: 1.5rem; }
   .figure:first-child { border-left: 0; padding-left: 0; }
 }
-.figure__n {
-  font-family: var(--f-display); font-size: clamp(1.9rem, 3.4vw, 2.6rem);
-  line-height: 1; letter-spacing: -.02em; color: var(--ink);
-}
-.figure__n sup { font-size: .45em; vertical-align: super; color: var(--ink-3); font-family: var(--f-mono); }
+.figure__n { font-family: var(--f-display); font-size: clamp(1.9rem, 3.4vw, 2.5rem); line-height: 1; letter-spacing: -.02em; color: var(--ink); }
 .figure__l { margin-top: .6rem; font-size: .8125rem; color: var(--ink-3); line-height: 1.45; max-width: 22ch; }
 
-/* ---------- deal detail ---------- */
-.deal { border: 1px solid var(--rule-2); background: var(--surface); }
-.deal + .deal { margin-top: 1.5rem; }
-.deal__head { border-bottom: 1px solid var(--rule); }
-.deal__headtext { padding: clamp(1.75rem, 3.5vw, 3rem); }
-.deal__media {
-  background: var(--paper-deep); border-bottom: 1px solid var(--rule);
-  padding: clamp(1.5rem, 3vw, 2.25rem); display: grid; place-items: center;
+/* ---------- full-bleed image band ---------- */
+.band { position: relative; border-top: 1px solid var(--rule); }
+.band img { width: 100%; height: clamp(240px, 34vw, 420px); object-fit: cover; object-position: 50% 40%; }
+.band__over {
+  position: absolute; inset: auto 0 0 0; padding: clamp(2rem, 5vw, 3.5rem) 0 clamp(1.5rem, 4vw, 3rem);
+  background:
+    linear-gradient(to right, rgba(8, 15, 34, .8) 0%, rgba(8, 15, 34, .25) 55%, rgba(8, 15, 34, 0) 100%),
+    linear-gradient(to top, rgba(8, 15, 34, .94) 0%, rgba(8, 15, 34, .74) 45%, rgba(8, 15, 34, 0) 100%);
 }
-.deal__media img { border: 1px solid var(--rule-2); max-height: 22rem; width: auto; }
-@media (min-width: 900px) {
-  /* Image sits beside the title block; the narrow view keeps it on top,
-     which is why it comes first in the source. */
-  .deal__head { display: grid; grid-template-columns: 7fr 5fr; }
-  .deal__media { grid-area: 1 / 2; border-bottom: 0; border-left: 1px solid var(--rule); }
-  .deal__headtext { grid-area: 1 / 1; align-self: center; }
-}
-.deal__body { padding: clamp(1.75rem, 3.5vw, 3rem); }
-.deal--split .deal__body { display: grid; gap: 2rem clamp(2rem, 4vw, 3.5rem); }
-@media (min-width: 900px) { .deal--split .deal__body { grid-template-columns: 1fr 1fr; } }
-.deal__prose { margin-top: 2rem; display: grid; gap: 1rem; }
-@media (min-width: 1000px) { .deal__prose { grid-template-columns: 1fr 1fr; gap: 1rem 3rem; } }
-.deal__figs {
-  display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem 1rem;
-  margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--rule);
-}
-.deal__figs--lead { margin-top: 0; padding-top: 0; border-top: 0; }
-@media (min-width: 640px) { .deal__figs { grid-template-columns: repeat(4, 1fr); } }
-.deal__fig strong {
-  display: block; font-family: var(--f-display); font-weight: 500;
-  font-size: 1.375rem; letter-spacing: -.01em; color: var(--navy-ink); line-height: 1.1;
-}
-.deal__fig span { display: block; margin-top: .45rem; font-size: .75rem; color: var(--ink-3); line-height: 1.4; }
-.pull {
-  margin: 2rem 0 0; padding-left: 1.5rem; border-left: 2px solid var(--navy);
-  font-family: var(--f-display); font-style: italic; font-size: 1.125rem;
-  line-height: 1.5; color: var(--ink);
-}
-.pull footer { margin-top: .85rem; font: 400 .8125rem/1.4 var(--f-mono); font-style: normal; color: var(--ink-3); letter-spacing: .04em; }
-
-/* ---------- testimonial ---------- */
-.quote {
-  margin-top: 1.5rem; background: var(--navy-field); color: var(--on-navy);
-  padding: clamp(2rem, 5vw, 3.5rem); border: 1px solid transparent;
-}
-.quote .eyebrow { color: var(--on-navy-2); }
-.quote blockquote {
-  margin: 1.5rem 0 0; font-family: var(--f-display); font-size: clamp(1.1875rem, 2.2vw, 1.5rem);
-  line-height: 1.5; max-width: 40ch;
-}
-@media (min-width: 900px) { .quote blockquote { max-width: 54ch; } }
-.quote figcaption { margin-top: 2rem; font-size: .875rem; color: var(--on-navy-2); }
-.quote figcaption b { display: block; color: var(--on-navy); font-weight: 500; }
+.band__over p { color: #fff; font-family: var(--f-display); font-size: clamp(1.125rem, 2.2vw, 1.75rem); line-height: 1.3; max-width: 30ch; }
+.band__over .eyebrow { color: #B9C9F2; margin-bottom: .75rem; }
 
 /* ---------- services ---------- */
-.svc { display: grid; gap: 0; }
-@media (min-width: 900px) { .svc { grid-template-columns: 5fr 7fr; gap: clamp(2rem, 4vw, 3.5rem); } }
-.svc__index { border-top: 1px solid var(--rule); }
-.svc__btn {
-  position: relative; display: block; width: 100%; text-align: left;
-  background: none; border: 0; border-bottom: 1px solid var(--rule);
-  padding: 1.15rem 2.5rem 1.15rem 1rem; cursor: pointer;
-  font-family: var(--f-display); font-size: 1.0625rem; font-weight: 500;
-  color: var(--ink-3); letter-spacing: -.005em;
-  transition: color .2s ease, padding-left .25s cubic-bezier(.2,.7,.3,1), background .2s ease;
-}
-.svc__btn::before {
-  content: ""; position: absolute; left: 0; top: -1px; bottom: -1px; width: 2px;
-  background: var(--navy); transform: scaleY(0); transform-origin: 50% 0;
-  transition: transform .3s cubic-bezier(.2,.7,.3,1);
-}
-.svc__btn::after {
-  content: "→"; position: absolute; right: 1rem; top: 50%; translate: 0 -50%;
-  font-family: var(--f-mono); font-size: .8125rem; color: var(--navy-ink);
-  opacity: 0; transition: opacity .2s ease, translate .25s ease;
-}
-.svc__btn:hover { color: var(--ink); background: color-mix(in srgb, var(--ink) 3%, transparent); }
-.svc__btn[aria-selected="true"] { color: var(--ink); padding-left: 1.5rem; }
-.svc__btn[aria-selected="true"]::before { transform: scaleY(1); }
-.svc__btn[aria-selected="true"]::after { opacity: 1; }
-.svc__note {
-  margin-top: 1.5rem; font-size: .875rem; color: var(--ink-3); line-height: 1.55; max-width: 30ch;
-}
-.svc__note a { color: var(--navy-ink); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color .2s ease; white-space: nowrap; }
-.svc__note a:hover { border-bottom-color: var(--navy-ink); }
-.svc__panels { display: grid; padding-top: clamp(1.5rem, 3vw, 0); }
-@media (min-width: 900px) { .svc__panels { padding-top: 0; } }
+.svc__panels { display: grid; }
 .svc__panel { grid-area: 1 / 1; visibility: hidden; opacity: 0; transform: translateY(6px); transition: opacity .3s ease, transform .3s ease; }
 .svc__panel[data-active] { visibility: visible; opacity: 1; transform: none; }
 .svc__panel > p { margin-top: 1rem; max-width: 58ch; }
-.svc__list { margin-top: 2rem; display: grid; gap: 0; border-top: 1px solid var(--rule); }
+.svc__list { margin-top: 2rem; display: grid; border-top: 1px solid var(--rule); }
 @media (min-width: 620px) { .svc__list { grid-template-columns: 1fr 1fr; column-gap: 2.5rem; } }
 .svc__list li { padding: 1rem 0; border-bottom: 1px solid var(--rule); }
 .svc__list b { display: block; font-weight: 500; font-size: .9375rem; color: var(--ink); }
 .svc__list span { display: block; margin-top: .25rem; font-size: .8125rem; color: var(--ink-3); line-height: 1.5; }
 
+/* ---------- key focus ---------- */
+.focus { display: grid; gap: clamp(1.5rem, 3vw, 2.5rem); align-items: center; }
+@media (min-width: 760px) { .focus { grid-template-columns: 1fr 1fr; } }
+.focus img { border: 1px solid var(--rule-2); }
+.focus__list { margin-top: 1.5rem; border-top: 1px solid var(--rule); }
+.focus__list li { display: flex; justify-content: space-between; gap: 1rem; padding: .8rem 0; border-bottom: 1px solid var(--rule); font-size: .9375rem; color: var(--ink-2); }
+.focus__list span { font-family: var(--f-mono); font-size: .75rem; color: var(--ink-3); white-space: nowrap; }
+
+/* ---------- deals ---------- */
+.deal { border: 1px solid var(--rule-2); background: var(--surface); margin-top: 2rem; }
+.deal__head { border-bottom: 1px solid var(--rule); }
+.deal__headtext { padding: clamp(1.5rem, 3vw, 2.25rem); }
+.deal__media { background: var(--paper-deep); border-bottom: 1px solid var(--rule); padding: clamp(1.25rem, 2.5vw, 1.75rem); display: grid; place-items: center; }
+.deal__media img { border: 1px solid var(--rule-2); max-height: 20rem; width: auto; }
+@media (min-width: 900px) {
+  .deal__head { display: grid; grid-template-columns: 7fr 5fr; }
+  .deal__media { grid-area: 1 / 2; border-bottom: 0; border-left: 1px solid var(--rule); }
+  .deal__headtext { grid-area: 1 / 1; align-self: center; }
+}
+.deal__body { padding: clamp(1.5rem, 3vw, 2.25rem); }
+.deal--split .deal__body { display: grid; gap: 1.5rem clamp(2rem, 4vw, 3rem); }
+@media (min-width: 900px) { .deal--split .deal__body { grid-template-columns: 1fr 1fr; } }
+.deal__figs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem 1rem; }
+@media (min-width: 640px) { .deal__figs { grid-template-columns: repeat(4, 1fr); } }
+.deal__fig strong { display: block; font-family: var(--f-display); font-weight: 500; font-size: 1.25rem; letter-spacing: -.01em; color: var(--navy-ink); line-height: 1.1; }
+.deal__fig span { display: block; margin-top: .4rem; font-size: .75rem; color: var(--ink-3); line-height: 1.4; }
+.deal__prose { margin-top: 1.75rem; display: grid; gap: 1rem; }
+@media (min-width: 1100px) { .deal__prose { grid-template-columns: 1fr 1fr; gap: 1rem 2.5rem; } }
+.pull { margin: 1.75rem 0 0; padding-left: 1.5rem; border-left: 2px solid var(--navy); font-family: var(--f-display); font-style: italic; font-size: 1.0625rem; line-height: 1.5; color: var(--ink); }
+.pull footer { margin-top: .85rem; font: 400 .8125rem/1.4 var(--f-mono); font-style: normal; color: var(--ink-3); letter-spacing: .04em; }
+
+/* ---------- accolade ---------- */
+.quote { margin-top: 2rem; background: var(--navy-field); color: var(--on-navy); padding: clamp(1.75rem, 4vw, 3rem); }
+.quote .eyebrow { color: var(--on-navy-2); }
+.quote blockquote { margin: 1.5rem 0 0; font-family: var(--f-display); font-size: clamp(1.125rem, 1.9vw, 1.375rem); line-height: 1.5; max-width: 52ch; }
+.quote figcaption { margin-top: 1.75rem; font-size: .875rem; color: var(--on-navy-2); }
+.quote figcaption b { display: block; color: var(--on-navy); font-weight: 500; }
+
 /* ---------- approach ---------- */
-.approach { display: grid; border-top: 1px solid var(--rule); }
-@media (min-width: 700px) { .approach { grid-template-columns: 1fr 1fr; } }
-@media (min-width: 1050px) { .approach { grid-template-columns: repeat(4, 1fr); } }
-.approach__item {
-  padding: 2rem 1.5rem 2rem 0; border-bottom: 1px solid var(--rule);
-  position: relative; transition: background .25s ease;
-}
-@media (min-width: 700px) {
-  .approach__item { border-left: 1px solid var(--rule); padding-left: 1.5rem; }
-  .approach__item:first-child { border-left: 0; padding-left: 0; }
-}
-@media (min-width: 1050px) { .approach__item { border-bottom: 0; } }
-.approach__item::after {
-  content: ""; position: absolute; left: 0; top: -1px; height: 2px; width: 100%;
-  background: var(--navy); transform: scaleX(0); transform-origin: 0 50%;
-  transition: transform .35s cubic-bezier(.2,.7,.3,1);
-}
-.approach__item:hover::after { transform: scaleX(1); }
-.approach__item h3 { font-family: var(--f-display); font-size: 1.125rem; }
-.approach__item p { margin-top: .65rem; font-size: .9375rem; color: var(--ink-3); line-height: 1.55; }
+.approach { border-top: 1px solid var(--rule); }
+.approach li { padding: 1.5rem 0; border-bottom: 1px solid var(--rule); display: grid; gap: .4rem; transition: padding-left .3s cubic-bezier(.2,.7,.3,1); }
+@media (min-width: 720px) { .approach li { grid-template-columns: 5fr 7fr; gap: 2rem; align-items: baseline; } }
+.approach li:hover { padding-left: .5rem; }
+.approach h3 { font-family: var(--f-display); font-size: 1.1875rem; }
+.approach p { font-size: .9375rem; color: var(--ink-3); line-height: 1.55; }
 
 /* ---------- firm ---------- */
-.firm { display: grid; gap: clamp(2.5rem, 5vw, 4rem); }
-@media (min-width: 1000px) { .firm { grid-template-columns: 7fr 5fr; align-items: start; } }
-.firm h3 { font-family: var(--f-display); margin-bottom: .75rem; }
 .firm__block + .firm__block { margin-top: 2.5rem; }
-.card { border: 1px solid var(--rule-2); background: var(--surface); }
+.firm h3 { font-family: var(--f-display); margin-bottom: .75rem; }
+.founder { margin-top: 2.5rem; border: 1px solid var(--rule-2); background: var(--surface); display: grid; }
+@media (min-width: 700px) { .founder { grid-template-columns: 5fr 7fr; align-items: stretch; } }
 /* Halftone portrait. The plate behind it stays light in both themes:
    inverting a face gives a photographic negative, and the deal
    announcement already reads as a light plate on the dark card.
    multiply drops the image's white ground onto the plate colour. */
-.founder__portrait {
-  background: var(--portrait-ground); border-bottom: 1px solid var(--rule);
-}
-.founder__img {
-  width: 100%; height: auto; aspect-ratio: 5 / 4;
-  object-fit: cover; object-position: 50% 18%;
-  mix-blend-mode: multiply;
-}
+.founder__portrait { background: var(--portrait-ground); border-bottom: 1px solid var(--rule); }
+@media (min-width: 700px) { .founder__portrait { border-bottom: 0; border-right: 1px solid var(--rule); } }
+.founder__img { width: 100%; height: 100%; aspect-ratio: 5 / 4; object-fit: cover; object-position: 50% 18%; mix-blend-mode: multiply; }
 .founder__body { padding: clamp(1.5rem, 3vw, 2rem); }
 .founder__name { font-family: var(--f-display); font-size: 1.375rem; }
 .founder__role { font-family: var(--f-mono); font-size: .6875rem; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); margin-top: .4rem; }
-.founder__quote {
-  margin-top: 1.25rem; font-family: var(--f-display); font-style: italic;
-  font-size: 1rem; line-height: 1.55; color: var(--ink-2);
-}
-.sectors { margin-top: 1.25rem; display: grid; border-top: 1px solid var(--rule); max-width: 40rem; }
-@media (min-width: 560px) { .sectors { grid-template-columns: 1fr 1fr; column-gap: 2.5rem; } }
-.sectors li {
-  padding: .8rem 0; border-bottom: 1px solid var(--rule);
-  font-size: .9375rem; color: var(--ink-2);
-  display: flex; align-items: baseline; gap: .7rem;
-}
-.sectors li::before { content: ""; width: 4px; height: 4px; background: var(--navy); flex: none; translate: 0 -3px; }
-.cv { margin-top: clamp(3rem, 5vw, 4rem); }
+.founder__quote { margin-top: 1.25rem; font-family: var(--f-display); font-style: italic; font-size: 1rem; line-height: 1.55; color: var(--ink-2); }
+.cv { margin-top: 2.5rem; }
 .cv ul { margin-top: 1.25rem; border-top: 1px solid var(--rule); }
-.cv li {
-  display: grid; grid-template-columns: 1fr auto; gap: .1rem 1.5rem;
-  padding: 1rem 0; border-bottom: 1px solid var(--rule);
-  transition: padding-left .25s cubic-bezier(.2,.7,.3,1);
-}
-@media (min-width: 700px) {
-  .cv li { grid-template-columns: 5fr 6fr auto; align-items: baseline; }
-  .cv li:hover { padding-left: .5rem; }
-}
+.cv > ul > li { display: grid; grid-template-columns: 1fr 4.5rem; gap: .1rem 1.5rem; padding: .9rem 0; border-bottom: 1px solid var(--rule); transition: padding-left .25s cubic-bezier(.2,.7,.3,1); }
+@media (min-width: 700px) { .cv > ul > li { grid-template-columns: 5fr 6fr 4.5rem; align-items: baseline; } .cv > ul > li:hover { padding-left: .5rem; } }
 .cv b { font-weight: 500; font-size: .9375rem; color: var(--ink); }
 .cv span { font-size: .875rem; color: var(--ink-3); }
 .cv time { font-family: var(--f-mono); font-size: .75rem; color: var(--ink-3); white-space: nowrap; justify-self: end; }
 @media (max-width: 699px) { .cv time { grid-row: 1 / span 2; grid-column: 2; align-self: center; } }
+.block { margin-top: 2.5rem; }
+.record { margin-top: 1.25rem; border-top: 1px solid var(--rule); display: grid; }
+@media (min-width: 760px) { .record { grid-template-columns: 1fr 1fr; column-gap: 2.5rem; } }
+.record li { padding: 1.15rem 0; border-bottom: 1px solid var(--rule); }
+.record h4 { font-family: var(--f-display); font-size: 1rem; font-weight: 500; }
+.record p { margin-top: .3rem; font-size: .875rem; color: var(--ink-3); line-height: 1.5; }
 
-/* ---------- record ---------- */
-.record { display: grid; border-top: 1px solid var(--rule); }
-@media (min-width: 760px) { .record { grid-template-columns: 1fr 1fr; column-gap: 3rem; } }
-.record li { padding: 1.5rem 0; border-bottom: 1px solid var(--rule); }
-.record h3 { font-family: var(--f-display); font-size: 1.0625rem; }
-.record p { margin-top: .4rem; font-size: .9375rem; color: var(--ink-3); line-height: 1.55; }
+/* ---------- clients ---------- */
+.clients { display: grid; border-top: 1px solid var(--rule); }
+@media (min-width: 640px) { .clients { grid-template-columns: 1fr 1fr; column-gap: 2.5rem; } }
+.clients li { padding: 1.5rem 0; border-bottom: 1px solid var(--rule); }
+.clients p { margin-top: .7rem; font-size: .875rem; color: var(--ink-3); line-height: 1.55; }
+.clients b { display: block; font-family: var(--f-display); font-size: 1.25rem; font-weight: 500; letter-spacing: -.01em; color: var(--ink); }
+.clients span { display: block; margin-top: .35rem; font-family: var(--f-mono); font-size: .6875rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); }
+.alongside { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--rule); }
+.alongside ul { margin-top: .85rem; display: flex; flex-wrap: wrap; gap: .5rem 2rem; }
+.alongside li { font-size: .9375rem; color: var(--ink-2); }
 
 /* ---------- contact ---------- */
 .contact { background: var(--navy-field); color: var(--on-navy); border-top: 0; }
 .contact .eyebrow { color: var(--on-navy-2); }
-.contact__grid { display: grid; gap: clamp(2.5rem, 5vw, 4rem); }
-@media (min-width: 900px) { .contact__grid { grid-template-columns: 6fr 5fr; } }
 .contact h2 { color: var(--on-navy); margin-top: .85rem; }
 .contact__lede { margin-top: 1.25rem; color: var(--on-navy-2); max-width: 46ch; font-size: 1.0625rem; line-height: 1.6; }
-.contact dl { border-top: 1px solid rgba(255,255,255,.22); }
+.contact dl { border-top: 1px solid rgba(255,255,255,.22); max-width: 34rem; }
 .contact dl > div { padding: 1.15rem 0; border-bottom: 1px solid rgba(255,255,255,.22); display: grid; gap: .3rem; }
 .contact dt { font-family: var(--f-mono); font-size: .625rem; letter-spacing: .16em; text-transform: uppercase; color: var(--on-navy-2); }
 .contact dd { font-size: 1rem; }
@@ -632,7 +510,7 @@ a.tombstone:hover .tombstone__more svg { transform: translateX(3px); }
 [data-reveal].is-in { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
   [data-reveal] { opacity: 1 !important; transform: none !important; transition: none !important; }
-  .progress, .masthead__in, .btn, .svc__btn, .svc__panel, .approach__item::after, .nav a::after { transition: none !important; }
+  .progress, .masthead__in, .btn, .svc__panel, .nav a::after, .approach li, .cv li { transition: none !important; }
 }
 </style>
 </head>
@@ -650,23 +528,25 @@ a.tombstone:hover .tombstone__more svg { transform: translateX(3px); }
       </span>
     </a>
     <nav class="nav" id="nav" aria-label="Primary">
-      <a href="#transactions">Transactions</a>
-      <a href="#services">Services</a>
-      <a href="#approach">Approach</a>
       <a href="#firm">The Firm</a>
+      <a href="#services">Services</a>
+      <a href="#transactions">Transactions</a>
+      <a href="#approach">Approach</a>
+      <a href="#clients">Clients</a>
       <a href="#contact">Contact</a>
     </nav>
     <div class="masthead__act">
-      <button class="icon-btn menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="drawer" aria-label="Open menu">
+      <button class="icon-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="drawer" aria-label="Open menu">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></svg>
       </button>
     </div>
   </div>
   <div class="drawer" id="drawer">
-    <a href="#transactions">Transactions</a>
-    <a href="#services">Services</a>
-    <a href="#approach">Approach</a>
     <a href="#firm">The Firm</a>
+    <a href="#services">Services</a>
+    <a href="#transactions">Transactions</a>
+    <a href="#approach">Approach</a>
+    <a href="#clients">Clients</a>
     <a href="#contact">Contact</a>
   </div>
 </header>
@@ -674,7 +554,7 @@ a.tombstone:hover .tombstone__more svg { transform: translateX(3px); }
 <main id="main">
   <span id="top"></span>
 
-  <!-- ===== Hero: type-led, with the firm's strongest proof beside it ===== -->
+  <!-- ===== Hero ===== -->
   <section class="wrap hero">
     <div class="hero__grid">
       <div>
@@ -705,112 +585,92 @@ a.tombstone:hover .tombstone__more svg { transform: translateX(3px); }
     </div>
 
     <div class="figures" style="margin-top:clamp(3rem,6vw,4.5rem)" data-reveal>
-      <div class="figure">
-        <p class="figure__n num">31</p>
-        <p class="figure__l">Years of advisory and leadership experience</p>
+      <div class="figure"><p class="figure__n num">31</p><p class="figure__l">Years of advisory and leadership experience</p></div>
+      <div class="figure"><p class="figure__n num">20</p><p class="figure__l">Of those years in leadership positions</p></div>
+      <div class="figure"><p class="figure__n num">2</p><p class="figure__l">M&amp;A mandates advised since founding</p></div>
+      <div class="figure"><p class="figure__n num">4</p><p class="figure__l">Sectors under active mandate</p></div>
+    </div>
+  </section>
+
+  <!-- ===== 1. The Firm ===== -->
+  <section class="wrap section" id="firm">
+    <div class="spread">
+      <div class="rail" data-reveal>
+        <p class="eyebrow">The firm</p>
+        <h2 class="display h2">A one-stop practice for running a business well</h2>
+        <p class="rail__note">Founded in 2025 by Mitanshu Shah, after 31 years in senior finance and leadership roles.</p>
+        <ul class="bullets bullets--plain">
+          <li><span class="bullets__item"><span class="bullets__mark"></span>Boutique, promoter-focused</span></li>
+          <li><span class="bullets__item"><span class="bullets__mark"></span>Every mandate led end to end</span></li>
+          <li><span class="bullets__item"><span class="bullets__mark"></span>Vadodara, Gujarat</span></li>
+          <li><span class="bullets__item"><span class="bullets__mark"></span>Two M&amp;A transactions closed</span></li>
+        </ul>
       </div>
-      <div class="figure">
-        <p class="figure__n num">20</p>
-        <p class="figure__l">Of those years in leadership positions</p>
-      </div>
-      <div class="figure">
-        <p class="figure__n num">2</p>
-        <p class="figure__l">M&amp;A mandates advised since founding</p>
-      </div>
-      <div class="figure">
-        <p class="figure__n num">4</p>
-        <p class="figure__l">Sectors under active mandate</p>
+
+      <div class="firm">
+        <div class="firm__block" data-reveal>
+          <h3 class="h3">Our story</h3>
+          <p class="body measure">MS Advisors is a boutique corporate advisory firm, built as a one-stop consulting practice for running a business efficiently. Since founding, the firm has advised on two M&amp;A transactions &mdash; including the divestment of a controlling stake in a listed specialty fine chemicals company &mdash; and holds active mandates across pharmaceuticals, specialty fine chemicals, utilities and allied sectors.</p>
+          <p class="body measure" style="margin-top:1rem">We help clients achieve breakthroughs in growth and profitability, develop a performance culture, and translate their vision into a working road map &mdash; partnering and handholding rather than simply advising.</p>
+        </div>
+        <div class="firm__block" data-reveal>
+          <h3 class="h3">Our vision</h3>
+          <p class="body measure">To support clients in achieving breakthroughs in business growth and profitability, developing a performance culture, and creating a strategic plan that turns their vision into a road map.</p>
+        </div>
+
+        <div class="founder" data-reveal>
+          <div class="founder__portrait">
+            <img class="founder__img" src="assets/Mitanshu-portrait.webp" width="760" height="608" loading="lazy" decoding="async" alt="Mitanshu Shah, Founder and CEO of MS Advisors">
+          </div>
+          <div class="founder__body">
+            <p class="founder__name">Mitanshu Shah</p>
+            <p class="founder__role">Founder &amp; CEO &middot; CMA, PGDBM</p>
+            <p class="founder__quote">&ldquo;I partner and handhold with clients rather than just advising. I roll up my sleeves and work with their teams to deliver solutions that work and are enduring.&rdquo;</p>
+            <p class="small" style="margin-top:1.25rem">31 years across healthcare, chemicals, real estate, engineering and financial services.</p>
+          </div>
+        </div>
+
+        <div class="cv" data-reveal>
+          <p class="eyebrow">Prior experience &middot; 31 years</p>
+          <ul>
+            <li><b>Arvind SmartSpaces Limited</b><span>Chief Financial Officer</span><time class="num">1 yr</time></li>
+            <li><b>Alembic Pharmaceuticals Limited</b><span>Senior Vice President, Finance</span><time class="num">18 yrs</time></li>
+            <li><b>Schneider Electric India</b><span>General Manager, Finance &amp; Legal</span><time class="num">8 yrs</time></li>
+            <li><b>Sun Pharmaceutical Industries Ltd</b><span>Senior Executive, Finance</span><time class="num">3 yrs</time></li>
+            <li><b>Sanofi India Limited</b><span>Executive, Finance</span><time class="num">2 yrs</time></li>
+          </ul>
+        </div>
+
+        <div class="block" data-reveal>
+          <p class="eyebrow">Past record</p>
+          <p class="small" style="margin-top:.75rem;max-width:60ch">Delivered in the founder&rsquo;s prior corporate roles rather than as MS Advisors mandates &mdash; and the experience every mandate now draws on.</p>
+          <ul class="record">
+            <li><h4>20&times; sales growth</h4><p>Part of the leadership team that spearheaded profitable sales growth of 20&times; over 18 years at a previous organisation.</p></li>
+            <li><h4>Public market fundraising</h4><p>Raised equity through an IPO and subsequent QIP and preferential issues.</p></li>
+            <li><h4>M&amp;A and JV transactions</h4><p>Led several M&amp;A, disinvestment and joint venture transactions, onshore and offshore.</p></li>
+            <li><h4>Capital allocation strategy</h4><p>Planned and executed a capital allocation strategy that generated an industry-beating CAGR.</p></li>
+            <li><h4>Institutional relationships</h4><p>Built relationships across MNC and private banks, PE funds and AMCs, and secured stock coverage from marquee funds and broking houses.</p></li>
+            <li><h4>Risk and treasury systems</h4><p>Built risk management matrices including the insurance portfolio, and implemented FX tools so global treasury ran as a profit centre.</p></li>
+          </ul>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- ===== Transactions ===== -->
-  <section class="wrap section" id="transactions">
-    <div class="sec-head">
-      <div>
-        <p class="eyebrow" data-reveal>Deal announcements</p>
-        <h2 class="display h2" data-reveal>Transactions</h2>
-      </div>
-      <p class="lede sec-head__aside" data-reveal>Mandates concluded for promoters and boards. Each was led end to end by the firm &mdash; origination, structuring, negotiation and close.</p>
-    </div>
-
-    <article class="deal" id="kronox" data-reveal>
-      <div class="deal__head">
-        <div class="deal__media">
-          <img src="assets/deals/kronox-indoborax-announcement.jpg" width="1200" height="1200" loading="lazy" decoding="async" alt="Deal announcement: MS Advisors advised the promoters of Kronox Lab Sciences Limited on the divestment of a 64.26% controlling stake to Indo Borax &amp; Chemicals Limited">
-        </div>
-        <div class="deal__headtext">
-          <p class="eyebrow">Change of control &mdash; listed to listed</p>
-          <h3 class="display h2" style="margin-top:.75rem">Kronox Lab Sciences <span style="color:var(--ink-3);font-weight:400">/</span> Indo Borax &amp; Chemicals</h3>
-          <p class="body" style="margin-top:1.25rem;font-weight:500;color:var(--ink)">MS Advisors, with CNK &amp; Associates LLP, acted as exclusive Strategic and M&amp;A Advisors to the promoters of Kronox Lab Sciences Limited.</p>
-          <p class="small num" style="margin-top:.6rem;font-family:var(--f-mono)">NSE: KRONOX &middot; BSE: 544187 &nbsp;&rarr;&nbsp; NSE: INDOBORAX &middot; BSE: 524342</p>
-        </div>
-      </div>
-
-      <div class="deal__body">
-        <div class="deal__figs deal__figs--lead">
-          <div class="deal__fig"><strong class="num">64.26%</strong><span>Controlling stake divested</span></div>
-          <div class="deal__fig"><strong class="num">9.95%</strong><span>Promoter stake retained</span></div>
-          <div class="deal__fig"><strong class="num">20 Aug 2026</strong><span>Agreement signed</span></div>
-          <div class="deal__fig"><strong class="num">~185</strong><span>Products in Kronox&rsquo;s portfolio</span></div>
-        </div>
-
-        <div class="deal__prose">
-          <p class="body">Kronox Lab Sciences was built from 2008 by Mr Ketan Ramani, Mr Pritesh Ramani and Mr Jogindersingh Jaswal into a specialty fine chemicals manufacturer serving pharmaceutical, nutraceutical and biotech customers, and listed on NSE and BSE in 2024. Its promoters have divested a 64.26% controlling stake to Indo Borax &amp; Chemicals Limited, triggering a mandatory open offer to public shareholders under the SEBI (SAST) Regulations.</p>
-          <p class="body">MS Advisors led the mandate through a six-month process alongside CNK &amp; Associates LLP, Sterling Associates as legal counsel, and the acquirer&rsquo;s advisers &mdash; Sidwim, Deloitte and Cyril Amarchand Mangaldas. The promoters retain a 9.95% stake and will support a structured transition, passing the business to a well-capitalised listed group with complementary operations positioned to fund its next phase of growth.</p>
-        </div>
-
-        <blockquote class="pull">
-          &ldquo;When founders of that calibre transition control, price is only one variable. Stewardship of the institution is the other, and it is the harder one to underwrite.&rdquo;
-          <footer>Mitanshu Shah &middot; Founder &amp; CEO</footer>
-        </blockquote>
-      </div>
-    </article>
-
-    <article class="deal deal--split" data-reveal>
-      <div class="deal__body">
-        <div>
-          <p class="eyebrow">Sell-side M&amp;A</p>
-          <h3 class="display h2" style="margin-top:.75rem">Maksons Fine Chem Pvt Ltd</h3>
-          <p class="small" style="margin-top:1rem">Ankleshwar, Gujarat &middot; First mandate closed under the MS Advisors banner</p>
-        </div>
-        <div>
-          <p class="body" style="font-weight:500;color:var(--ink)">MS Advisors acted as exclusive sell-side advisor, leading the mandate end to end from origination to closure.</p>
-          <p class="body" style="margin-top:1rem">We advised the promoters of Maksons Fine Chem Pvt Ltd on its acquisition by a large India-based, PE-backed API platform with established interests in specialty fine chemicals and pharmaceuticals. It set the process discipline the firm now applies to every promoter mandate.</p>
-        </div>
-      </div>
-    </article>
-
-    <figure class="quote" data-reveal>
-      <p class="eyebrow">Client &middot; Maksons Fine Chem</p>
-      <blockquote>&ldquo;What stood out most was the speed and ease with which the entire process was navigated. A transaction of this nature, with its inherent complexities, was concluded in record time&hellip; His ability to deeply align with our perspective &mdash; understanding our priorities, our sensitivities, and our expectations &mdash; while simultaneously driving the transaction forward with clarity and conviction, was remarkable&hellip; We would not hesitate to recommend them, without reservation, to any promoter considering a transaction of significance.&rdquo;</blockquote>
-      <figcaption>
-        <b>Kumar Makadia</b>
-        Managing Director, Maksons Fine Chem Pvt Ltd
-      </figcaption>
-    </figure>
-  </section>
-
-  <!-- ===== Services ===== -->
+  <!-- ===== 2. What we are engaged to do ===== -->
   <section class="wrap section" id="services">
-    <div class="sec-head">
-      <div>
-        <p class="eyebrow" data-reveal>Practice areas</p>
-        <h2 class="display h2" data-reveal>What we are engaged to do</h2>
-      </div>
-      <p class="lede sec-head__aside" data-reveal>Five practice areas, each led end to end by the firm. Select one to see what a mandate covers.</p>
-    </div>
-
-    <div class="svc">
-      <div class="svc__col" data-reveal>
-      <div class="svc__index" role="tablist" aria-label="Practice areas">
-        <button class="svc__btn" id="tab-finance" role="tab" aria-selected="true" aria-controls="panel-finance" tabindex="0" data-svc="finance" type="button">Transformation &amp; Business Finance</button>
-        <button class="svc__btn" id="tab-structuring" role="tab" aria-selected="false" aria-controls="panel-structuring" tabindex="-1" data-svc="structuring" type="button">Financial Structuring &amp; M&amp;A</button>
-        <button class="svc__btn" id="tab-ir" role="tab" aria-selected="false" aria-controls="panel-ir" tabindex="-1" data-svc="ir" type="button">Investor Relations</button>
-        <button class="svc__btn" id="tab-partnering" role="tab" aria-selected="false" aria-controls="panel-partnering" tabindex="-1" data-svc="partnering" type="button">Strategic Partnering</button>
-        <button class="svc__btn" id="tab-treasury" role="tab" aria-selected="false" aria-controls="panel-treasury" tabindex="-1" data-svc="treasury" type="button">Treasury &amp; Growth Capital</button>
-      </div>
-      <p class="svc__note">Most mandates draw on more than one. <a href="#contact">Tell us what you are weighing &rarr;</a></p>
+    <div class="spread">
+      <div class="rail" data-reveal>
+        <p class="eyebrow">Practice areas</p>
+        <h2 class="display h2">What we are engaged to do</h2>
+        <p class="rail__note">Five practice areas, each led end to end. Select one to see what a mandate covers.</p>
+        <ul class="bullets" role="tablist" aria-label="Practice areas">
+          <li><button class="bullets__item" id="tab-finance" role="tab" aria-selected="true" aria-controls="panel-finance" tabindex="0" data-svc="finance" type="button"><span class="bullets__mark"></span>Transformation &amp; Business Finance</button></li>
+          <li><button class="bullets__item" id="tab-structuring" role="tab" aria-selected="false" aria-controls="panel-structuring" tabindex="-1" data-svc="structuring" type="button"><span class="bullets__mark"></span>Financial Structuring &amp; M&amp;A</button></li>
+          <li><button class="bullets__item" id="tab-ir" role="tab" aria-selected="false" aria-controls="panel-ir" tabindex="-1" data-svc="ir" type="button"><span class="bullets__mark"></span>Investor Relations</button></li>
+          <li><button class="bullets__item" id="tab-partnering" role="tab" aria-selected="false" aria-controls="panel-partnering" tabindex="-1" data-svc="partnering" type="button"><span class="bullets__mark"></span>Strategic Partnering</button></li>
+          <li><button class="bullets__item" id="tab-treasury" role="tab" aria-selected="false" aria-controls="panel-treasury" tabindex="-1" data-svc="treasury" type="button"><span class="bullets__mark"></span>Treasury &amp; Growth Capital</button></li>
+        </ul>
       </div>
 
       <div class="svc__panels" data-reveal>
@@ -825,7 +685,6 @@ a.tombstone:hover .tombstone__more svg { transform: translateX(3px); }
             <li><b>AOP Design</b><span>Design and implementation of the annual operating plan system.</span></li>
           </ul>
         </div>
-
         <div class="svc__panel" id="panel-structuring" role="tabpanel" aria-labelledby="tab-structuring" tabindex="0">
           <h3 class="display h3">Financial Structuring &amp; M&amp;A</h3>
           <p class="body">We advise promoters and boards through the capital and ownership decisions that define a company&rsquo;s next stage &mdash; listing, acquisition, expansion financing. Each mandate is led end to end, from structuring through negotiation to close.</p>
@@ -837,7 +696,6 @@ a.tombstone:hover .tombstone__more svg { transform: translateX(3px); }
             <li><b>Cross-Border Set-Up</b><span>Overseas holding and operating structures, offshore entity creation and accounting.</span></li>
           </ul>
         </div>
-
         <div class="svc__panel" id="panel-ir" role="tabpanel" aria-labelledby="tab-ir" tabindex="0">
           <h3 class="display h3">Investor Relations</h3>
           <p class="body">We help listed companies strategise and operationalise an IR programme benchmarked against best practice. The goal is a cap table built on quality institutional ownership and a communication cadence investors trust.</p>
@@ -850,7 +708,6 @@ a.tombstone:hover .tombstone__more svg { transform: translateX(3px); }
             <li><b>Research Coverage</b><span>Securing coverage from analysts and broking houses.</span></li>
           </ul>
         </div>
-
         <div class="svc__panel" id="panel-partnering" role="tabpanel" aria-labelledby="tab-partnering" tabindex="0">
           <h3 class="display h3">Strategic Partnering with Promoters</h3>
           <p class="body">For promoters who need a senior finance partner without a full-time hire, we operate as a virtual CFO&rsquo;s office &mdash; handholding through projects, transactions and compliance so the founder stays focused on the business.</p>
@@ -863,7 +720,6 @@ a.tombstone:hover .tombstone__more svg { transform: translateX(3px); }
             <li><b>Tax &amp; Legal Support</b><span>Direct and indirect tax strategy and compliance, and critical legal issues.</span></li>
           </ul>
         </div>
-
         <div class="svc__panel" id="panel-treasury" role="tabpanel" aria-labelledby="tab-treasury" tabindex="0">
           <h3 class="display h3">Treasury Management &amp; Growth Capital</h3>
           <p class="body">We support promoters and family offices in managing capital and risk with the same discipline applied to operating decisions &mdash; spanning wealth management, hedging and debt syndication.</p>
@@ -878,133 +734,169 @@ a.tombstone:hover .tombstone__more svg { transform: translateX(3px); }
     </div>
   </section>
 
-  <!-- ===== Approach ===== -->
-  <section class="wrap section" id="approach">
-    <div class="sec-head">
-      <div>
-        <p class="eyebrow" data-reveal>How we work</p>
-        <h2 class="display h2" data-reveal>What a mandate with us looks like</h2>
+  <!-- ===== Image band ===== -->
+  <div class="band" aria-hidden="false">
+    <img src="assets/img/skyline.webp" width="1800" height="760" loading="lazy" decoding="async" alt="">
+    <div class="band__over">
+      <div class="wrap">
+        <p class="eyebrow">Where we work</p>
+        <p>Promoter-led businesses, at the point where ownership, capital and control are decided.</p>
       </div>
-      <p class="lede sec-head__aside" data-reveal>We partner and handhold rather than simply advise &mdash; four commitments that hold on every engagement.</p>
     </div>
-    <div class="approach" data-reveal>
-      <div class="approach__item">
-        <h3>Hands-on partnership</h3>
-        <p>We roll up our sleeves and work alongside your team, from the first structuring note to the closing table.</p>
+  </div>
+
+  <!-- ===== 3. Key focus & transactions ===== -->
+  <section class="wrap section" id="transactions">
+    <div class="spread">
+      <div class="rail" data-reveal>
+        <p class="eyebrow">Key focus</p>
+        <h2 class="display h2">Transactions</h2>
+        <p class="rail__note">Mandates concluded for promoters and boards, and the sectors we hold active mandates in.</p>
+        <ul class="bullets bullets--plain">
+          <li><span class="bullets__item"><span class="bullets__mark"></span>Pharmaceuticals</span></li>
+          <li><span class="bullets__item"><span class="bullets__mark"></span>Specialty fine chemicals</span></li>
+          <li><span class="bullets__item"><span class="bullets__mark"></span>Utilities</span></li>
+          <li><span class="bullets__item"><span class="bullets__mark"></span>Allied sectors</span></li>
+        </ul>
       </div>
-      <div class="approach__item">
-        <h3>Decisions on reliable data</h3>
-        <p>We bring the discipline of making critical calls on numbers that hold up under diligence.</p>
-      </div>
-      <div class="approach__item">
-        <h3>Solutions that endure</h3>
-        <p>What we build has to still work two years after the mandate closes, not just on signing day.</p>
-      </div>
-      <div class="approach__item">
-        <h3>Risk found early</h3>
-        <p>We identify exposure and build the frameworks to contain it before it reaches the board.</p>
+
+      <div>
+        <div class="focus" data-reveal>
+          <div>
+            <h3 class="display h3">Manufacturing businesses, promoter-owned</h3>
+            <p class="body" style="margin-top:1rem">Our mandates sit with founder-owned manufacturers: businesses built over decades, where a transaction decides not only price but who stewards the institution next. That is where the firm&rsquo;s experience is deepest.</p>
+            <ul class="focus__list">
+              <li>Sell-side M&amp;A <span>2 closed</span></li>
+              <li>Change of control, listed <span>1 closed</span></li>
+              <li>IPO / QIP advisory <span>Practice area</span></li>
+              <li>Debt syndication &amp; growth capital <span>Practice area</span></li>
+            </ul>
+          </div>
+          <img src="assets/img/manufacturing.webp" width="1200" height="900" loading="lazy" decoding="async" alt="A manufacturing line of the kind operated by the firm's specialty chemicals and pharmaceutical clients">
+        </div>
+
+        <article class="deal" id="kronox" data-reveal>
+          <div class="deal__head">
+            <div class="deal__media">
+              <img src="assets/deals/kronox-indoborax-announcement.jpg" width="1200" height="1200" loading="lazy" decoding="async" alt="Deal announcement: MS Advisors advised the promoters of Kronox Lab Sciences Limited on the divestment of a 64.26% controlling stake to Indo Borax &amp; Chemicals Limited">
+            </div>
+            <div class="deal__headtext">
+              <p class="eyebrow">Change of control &mdash; listed to listed</p>
+              <h3 class="display h2" style="margin-top:.75rem">Kronox Lab Sciences <span style="color:var(--ink-3);font-weight:400">/</span> Indo Borax &amp; Chemicals</h3>
+              <p class="body" style="margin-top:1.25rem;font-weight:500;color:var(--ink)">MS Advisors, with CNK &amp; Associates LLP, acted as exclusive Strategic and M&amp;A Advisors to the promoters of Kronox Lab Sciences Limited.</p>
+              <p class="small num" style="margin-top:.6rem;font-family:var(--f-mono)">NSE: KRONOX &middot; BSE: 544187 &nbsp;&rarr;&nbsp; NSE: INDOBORAX &middot; BSE: 524342</p>
+            </div>
+          </div>
+          <div class="deal__body">
+            <div class="deal__figs">
+              <div class="deal__fig"><strong class="num">64.26%</strong><span>Controlling stake divested</span></div>
+              <div class="deal__fig"><strong class="num">9.95%</strong><span>Promoter stake retained</span></div>
+              <div class="deal__fig"><strong class="num">20 Aug 2026</strong><span>Agreement signed</span></div>
+              <div class="deal__fig"><strong class="num">~185</strong><span>Products in Kronox&rsquo;s portfolio</span></div>
+            </div>
+            <div class="deal__prose">
+              <p class="body">Kronox Lab Sciences was built from 2008 by Mr Ketan Ramani, Mr Pritesh Ramani and Mr Jogindersingh Jaswal into a specialty fine chemicals manufacturer serving pharmaceutical, nutraceutical and biotech customers, and listed on NSE and BSE in 2024. Its promoters have divested a 64.26% controlling stake to Indo Borax &amp; Chemicals Limited, triggering a mandatory open offer to public shareholders under the SEBI (SAST) Regulations.</p>
+              <p class="body">MS Advisors led the mandate through a six-month process alongside CNK &amp; Associates LLP, Sterling Associates as legal counsel, and the acquirer&rsquo;s advisers &mdash; Sidwim, Deloitte and Cyril Amarchand Mangaldas. The promoters retain a 9.95% stake and will support a structured transition, passing the business to a well-capitalised listed group with complementary operations positioned to fund its next phase of growth.</p>
+            </div>
+            <blockquote class="pull">
+              &ldquo;When founders of that calibre transition control, price is only one variable. Stewardship of the institution is the other, and it is the harder one to underwrite.&rdquo;
+              <footer>Mitanshu Shah &middot; Founder &amp; CEO</footer>
+            </blockquote>
+          </div>
+        </article>
+
+        <article class="deal deal--split" data-reveal>
+          <div class="deal__body">
+            <div>
+              <p class="eyebrow">Sell-side M&amp;A</p>
+              <h3 class="display h2" style="margin-top:.75rem">Maksons Fine Chem Pvt Ltd</h3>
+              <p class="small" style="margin-top:1rem">Ankleshwar, Gujarat &middot; First mandate closed under the MS Advisors banner</p>
+            </div>
+            <div>
+              <p class="body" style="font-weight:500;color:var(--ink)">MS Advisors acted as exclusive sell-side advisor, leading the mandate end to end from origination to closure.</p>
+              <p class="body" style="margin-top:1rem">We advised the promoters of Maksons Fine Chem Pvt Ltd on its acquisition by a large India-based, PE-backed API platform with established interests in specialty fine chemicals and pharmaceuticals. It set the process discipline the firm now applies to every promoter mandate.</p>
+            </div>
+          </div>
+        </article>
+
+        <figure class="quote" data-reveal>
+          <p class="eyebrow">Accolade &middot; Maksons Fine Chem</p>
+          <blockquote>&ldquo;What stood out most was the speed and ease with which the entire process was navigated. A transaction of this nature, with its inherent complexities, was concluded in record time&hellip; His ability to deeply align with our perspective &mdash; understanding our priorities, our sensitivities, and our expectations &mdash; while simultaneously driving the transaction forward with clarity and conviction, was remarkable&hellip; We would not hesitate to recommend them, without reservation, to any promoter considering a transaction of significance.&rdquo;</blockquote>
+          <figcaption>
+            <b>Kumar Makadia</b>
+            Managing Director, Maksons Fine Chem Pvt Ltd
+          </figcaption>
+        </figure>
       </div>
     </div>
   </section>
 
-  <!-- ===== The Firm ===== -->
-  <section class="wrap section" id="firm">
-    <div class="sec-head">
-      <div>
-        <p class="eyebrow" data-reveal>The firm</p>
-        <h2 class="display h2" data-reveal>A one-stop practice for running a business well</h2>
+  <!-- ===== 4. Approach ===== -->
+  <section class="wrap section" id="approach">
+    <div class="spread">
+      <div class="rail" data-reveal>
+        <p class="eyebrow">How we work</p>
+        <h2 class="display h2">What a mandate with us looks like</h2>
+        <p class="rail__note">We partner and handhold rather than simply advise &mdash; four commitments that hold on every engagement.</p>
       </div>
-      <p class="lede sec-head__aside" data-reveal>MS Advisors was founded in 2025 by Mitanshu Shah after 31 years in senior finance and leadership roles.</p>
-    </div>
-
-    <div class="firm">
-      <div>
-        <div class="firm__block" data-reveal>
-          <h3 class="h3">Our story</h3>
-          <p class="body measure">MS Advisors is a boutique corporate advisory firm, built as a one-stop consulting practice for running a business efficiently. Since founding, the firm has advised on two M&amp;A transactions &mdash; including the divestment of a controlling stake in a listed specialty fine chemicals company &mdash; and holds active mandates across pharmaceuticals, specialty fine chemicals, utilities and allied sectors.</p>
-          <p class="body measure" style="margin-top:1rem">We help clients achieve breakthroughs in growth and profitability, develop a performance culture, and translate their vision into a working road map &mdash; partnering and handholding rather than simply advising.</p>
-        </div>
-        <div class="firm__block" data-reveal>
-          <h3 class="h3">Our vision</h3>
-          <p class="body measure">To support clients in achieving breakthroughs in business growth and profitability, developing a performance culture, and creating a strategic plan that turns their vision into a road map.</p>
-        </div>
-        <div class="firm__block" data-reveal>
-          <h3 class="h3">Sectors under mandate</h3>
-          <ul class="sectors">
-            <li>Pharmaceuticals</li>
-            <li>Specialty fine chemicals</li>
-            <li>Utilities</li>
-            <li>Allied sectors</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="card" data-reveal>
-        <div class="founder__portrait">
-          <img class="founder__img" src="assets/Mitanshu-portrait.webp" width="760" height="608" loading="lazy" decoding="async" alt="Mitanshu Shah, Founder and CEO of MS Advisors">
-        </div>
-        <div class="founder__body">
-          <p class="founder__name">Mitanshu Shah</p>
-          <p class="founder__role">Founder &amp; CEO &middot; CMA, PGDBM</p>
-          <p class="founder__quote">&ldquo;I partner and handhold with clients rather than just advising. I roll up my sleeves and work with their teams to deliver solutions that work and are enduring.&rdquo;</p>
-          <p class="small" style="margin-top:1.25rem">31 years across healthcare, chemicals, real estate, engineering and financial services.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="cv" data-reveal>
-      <p class="eyebrow">Prior experience &middot; 31 years</p>
-      <ul>
-        <li><b>Arvind SmartSpaces Limited</b><span>Chief Financial Officer</span><time class="num">1 yr</time></li>
-        <li><b>Alembic Pharmaceuticals Limited</b><span>Senior Vice President, Finance</span><time class="num">18 yrs</time></li>
-        <li><b>Schneider Electric India</b><span>General Manager, Finance &amp; Legal</span><time class="num">8 yrs</time></li>
-        <li><b>Sun Pharmaceutical Industries Ltd</b><span>Senior Executive, Finance</span><time class="num">3 yrs</time></li>
-        <li><b>Sanofi India Limited</b><span>Executive, Finance</span><time class="num">2 yrs</time></li>
+      <ul class="approach" data-reveal>
+        <li>
+          <h3>Hands-on partnership</h3>
+          <p>We roll up our sleeves and work alongside your team, from the first structuring note to the closing table.</p>
+        </li>
+        <li>
+          <h3>Decisions on reliable data</h3>
+          <p>We bring the discipline of making critical calls on numbers that hold up under diligence.</p>
+        </li>
+        <li>
+          <h3>Solutions that endure</h3>
+          <p>What we build has to still work two years after the mandate closes, not just on signing day.</p>
+        </li>
+        <li>
+          <h3>Risk found early</h3>
+          <p>We identify exposure and build the frameworks to contain it before it reaches the board.</p>
+        </li>
       </ul>
     </div>
   </section>
 
-  <!-- ===== Track record ===== -->
-  <section class="wrap section" id="record">
-    <div class="sec-head">
-      <div>
-        <p class="eyebrow" data-reveal>Track record</p>
-        <h2 class="display h2" data-reveal>Delivered before the firm existed</h2>
+  <!-- ===== 5. Clients ===== -->
+  <section class="wrap section" id="clients">
+    <div class="spread">
+      <div class="rail" data-reveal>
+        <p class="eyebrow">Clients</p>
+        <h2 class="display h2">Who we have acted for</h2>
+        <p class="rail__note">Mandates the firm is free to name. Others are held in confidence at the client&rsquo;s request.</p>
       </div>
-      <p class="lede sec-head__aside" data-reveal>The results below were delivered in the founder&rsquo;s prior corporate roles, not as MS Advisors mandates &mdash; but they are the experience every mandate now draws on.</p>
+      <div>
+        <ul class="clients" data-reveal>
+          <li>
+            <b>Kronox Lab Sciences Limited</b>
+            <span>Promoters &middot; change of control &middot; 2026</span>
+            <p>Divestment of a 64.26% controlling stake in a listed specialty fine chemicals manufacturer, with a 9.95% stake retained.</p>
+          </li>
+          <li>
+            <b>Maksons Fine Chem Pvt Ltd</b>
+            <span>Promoters &middot; sell-side M&amp;A</span>
+            <p>Sale to a large India-based, PE-backed API platform, led from origination to closure.</p>
+          </li>
+        </ul>
+        <p class="small" style="margin-top:1.5rem;max-width:60ch" data-reveal>Further mandates across pharmaceuticals, specialty fine chemicals, utilities and allied sectors are active and held in confidence.</p>
+        <div class="alongside" data-reveal>
+          <p class="eyebrow">Worked alongside</p>
+          <ul>
+            <li>CNK &amp; Associates LLP &mdash; co-advisor</li>
+            <li>Sterling Associates &mdash; legal counsel</li>
+          </ul>
+        </div>
+      </div>
     </div>
-    <ul class="record" data-reveal>
-      <li>
-        <h3>20&times; sales growth</h3>
-        <p>Part of the leadership team that spearheaded profitable sales growth of 20&times; over 18 years at a previous organisation.</p>
-      </li>
-      <li>
-        <h3>Public market fundraising</h3>
-        <p>Raised equity through an IPO and subsequent QIP and preferential issues.</p>
-      </li>
-      <li>
-        <h3>M&amp;A and JV transactions</h3>
-        <p>Led several M&amp;A, disinvestment and joint venture transactions, both onshore and offshore.</p>
-      </li>
-      <li>
-        <h3>Capital allocation strategy</h3>
-        <p>Planned and executed a capital allocation strategy that generated an industry-beating CAGR.</p>
-      </li>
-      <li>
-        <h3>Institutional relationships</h3>
-        <p>Built relationships across large MNC and private banks, PE funds and AMCs, and secured stock coverage from marquee funds and broking houses.</p>
-      </li>
-      <li>
-        <h3>Risk and treasury systems</h3>
-        <p>Built risk management matrices including the insurance portfolio, and implemented FX tools so global treasury ran as a profit centre.</p>
-      </li>
-    </ul>
   </section>
 
-  <!-- ===== Contact ===== -->
+  <!-- ===== 6. Contact ===== -->
   <section class="section contact" id="contact">
-    <div class="wrap contact__grid">
-      <div data-reveal>
+    <div class="wrap spread">
+      <div class="rail" data-reveal style="position:static">
         <p class="eyebrow">Enquiries</p>
         <h2 class="display h2">Considering a transaction?</h2>
         <p class="contact__lede">If you are a promoter weighing a buy-side or sell-side transaction in pharmaceuticals, specialty fine chemicals, utilities or an allied sector, talk to us before you talk to a banker.</p>
@@ -1041,10 +933,11 @@ a.tombstone:hover .tombstone__more svg { transform: translateX(3px); }
         </span>
       </a>
       <nav class="foot__nav" aria-label="Footer">
-        <a href="#transactions">Transactions</a>
-        <a href="#services">Services</a>
-        <a href="#approach">Approach</a>
         <a href="#firm">The Firm</a>
+        <a href="#services">Services</a>
+        <a href="#transactions">Transactions</a>
+        <a href="#approach">Approach</a>
+        <a href="#clients">Clients</a>
         <a href="#contact">Contact</a>
       </nav>
     </div>
@@ -1087,14 +980,13 @@ a.tombstone:hover .tombstone__more svg { transform: translateX(3px); }
       masthead.classList.toggle('is-stuck', y > 8);
       var max = document.documentElement.scrollHeight - window.innerHeight;
       progress.style.transform = 'scaleX(' + (max > 0 ? Math.min(y / max, 1) : 0) + ')';
+      markCurrent();
       ticking = false;
     });
   }
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
 
-  /* ---- services tabs (WAI-ARIA tabs pattern) ---- */
-  var tabs = Array.prototype.slice.call(document.querySelectorAll('.svc__btn'));
+  /* ---- practice-area bullets (WAI-ARIA tabs pattern) ---- */
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.bullets__item[role="tab"]'));
   var panels = Array.prototype.slice.call(document.querySelectorAll('.svc__panel'));
   function select(tab) {
     tabs.forEach(function (t) {
@@ -1103,8 +995,8 @@ a.tombstone:hover .tombstone__more svg { transform: translateX(3px); }
       t.setAttribute('tabindex', on ? '0' : '-1');
     });
     panels.forEach(function (p) {
-      if (p.id === 'panel-' + tab.dataset.svc) { p.setAttribute('data-active', ''); }
-      else { p.removeAttribute('data-active'); }
+      if (p.id === 'panel-' + tab.dataset.svc) p.setAttribute('data-active', '');
+      else p.removeAttribute('data-active');
     });
   }
   tabs.forEach(function (tab, i) {
@@ -1121,6 +1013,22 @@ a.tombstone:hover .tombstone__more svg { transform: translateX(3px); }
       tabs[next].focus();
     });
   });
+
+  /* ---- current section in nav ---- */
+  var links = Array.prototype.slice.call(document.querySelectorAll('.nav a'));
+  var targets = links.map(function (a) { return document.querySelector(a.getAttribute('href')); });
+  function markCurrent() {
+    var mark = window.scrollY + window.innerHeight * 0.35;
+    var current = -1;
+    targets.forEach(function (t, i) { if (t && t.offsetTop <= mark) current = i; });
+    links.forEach(function (a, i) {
+      if (i === current) a.setAttribute('aria-current', 'true');
+      else a.removeAttribute('aria-current');
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', markCurrent);
+  onScroll();
 
   /* ---- reveal on scroll ---- */
   if (!reduce.matches && 'IntersectionObserver' in window) {
@@ -1140,24 +1048,6 @@ a.tombstone:hover .tombstone__more svg { transform: translateX(3px); }
   } else {
     document.querySelectorAll('[data-reveal]').forEach(function (el) { el.classList.add('is-in'); });
   }
-
-  /* ---- current section in nav ---- */
-  var links = Array.prototype.slice.call(document.querySelectorAll('.nav a'));
-  var targets = links.map(function (a) { return document.querySelector(a.getAttribute('href')); });
-  function markCurrent() {
-    var mark = window.scrollY + window.innerHeight * 0.35;
-    var current = -1;
-    targets.forEach(function (t, i) {
-      if (t && t.offsetTop <= mark) current = i;
-    });
-    links.forEach(function (a, i) {
-      if (i === current) a.setAttribute('aria-current', 'true');
-      else a.removeAttribute('aria-current');
-    });
-  }
-  window.addEventListener('scroll', markCurrent, { passive: true });
-  window.addEventListener('resize', markCurrent);
-  markCurrent();
 })();
 </script>
 </body>
