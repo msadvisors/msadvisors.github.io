@@ -222,7 +222,7 @@ ul, ol, dl, dd { margin: 0; padding: 0; list-style: none; }
   text-transform: uppercase; color: var(--navy-ink); margin: 0;
 }
 .display { font-family: var(--f-display); font-weight: 500; letter-spacing: -.015em; line-height: 1.12; }
-.h1 { font-size: clamp(2.25rem, 4.8vw, 3.6rem); }
+.h1 { font-size: clamp(2.4rem, 5.6vw, 4.25rem); }
 .h2 { font-size: clamp(1.75rem, 3.2vw, 2.4rem); line-height: 1.16; }
 .h3 { font-size: clamp(1.25rem, 2vw, 1.5rem); line-height: 1.25; }
 .lede { font-size: clamp(1.0625rem, 1.4vw, 1.1875rem); color: var(--ink-2); line-height: 1.6; }
@@ -329,13 +329,12 @@ button.bullets__item:hover .bullets__mark { background: var(--navy); }
 .bullets--plain .bullets__mark { background: var(--navy); }
 
 /* ---------- hero ---------- */
-.hero { padding-top: clamp(3rem, 7vw, 5rem); padding-bottom: clamp(3rem, 6vw, 4.5rem); }
-.hero__grid { display: grid; gap: clamp(2.5rem, 5vw, 4rem); }
-@media (min-width: 1000px) { .hero__grid { grid-template-columns: 1.05fr .95fr; align-items: start; } }
-.hero h1 { margin-top: 1.25rem; }
+.hero { padding-top: clamp(3.5rem, 9vw, 7rem); padding-bottom: clamp(3rem, 6vw, 4.5rem); }
+.hero h1 { margin-top: 1.5rem; max-width: 18ch; }
 .hero h1 em { font-style: italic; color: var(--navy-ink); }
-.hero__lede { margin-top: 1.5rem; max-width: 46ch; }
-.hero__cta { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 2.25rem; }
+.hero__lede { margin-top: 1.75rem; max-width: 58ch; }
+.hero__cta { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 2.5rem; }
+.hero .figures { margin-top: clamp(3.5rem, 8vw, 6rem); }
 @media (max-width: 520px) { .hero__cta .btn { flex: 1 1 100%; justify-content: center; } }
 
 /* tombstone: the industry's own announcement form */
@@ -361,7 +360,7 @@ a.tombstone:hover .tombstone__more svg { transform: translateX(3px); }
 
 /* ---------- figure strip ---------- */
 .figures { display: grid; grid-template-columns: repeat(2, 1fr); border-top: 1px solid var(--rule); }
-@media (min-width: 800px) { .figures { grid-template-columns: repeat(4, 1fr); } }
+@media (min-width: 800px) { .figures { grid-template-columns: repeat(3, 1fr); } }
 .figure { padding: 1.75rem 1.5rem 1.75rem 0; border-bottom: 1px solid var(--rule); }
 @media (min-width: 800px) {
   .figure { border-bottom: 0; border-left: 1px solid var(--rule); padding-left: 1.5rem; }
@@ -382,7 +381,23 @@ a.tombstone:hover .tombstone__more svg { transform: translateX(3px); }
 .band__over p { color: #fff; font-family: var(--f-display); font-size: clamp(1.125rem, 2.2vw, 1.75rem); line-height: 1.3; max-width: 30ch; }
 .band__over .eyebrow { color: #B9C9F2; margin-bottom: .75rem; }
 
-/* ---------- services ---------- */
+/* ---------- services ----------
+   The section is pinned while its own track scrolls past, so one continuous
+   scroll steps through all five practice areas. The page never hijacks the
+   wheel: the track is simply tall and the stage is sticky inside it. The
+   whole behaviour is opt-in (wide viewports, motion allowed) — everywhere
+   else the bullets stay a plain click-to-switch tab list. */
+.svc { padding-block: var(--sec); }
+.svc__count {
+  margin-top: 1.5rem; font-family: var(--f-mono); font-size: .75rem;
+  letter-spacing: .12em; color: var(--ink-3);
+}
+.svc__count #svc-index { color: var(--navy-ink); }
+.svc__bar { margin-top: .75rem; height: 2px; background: var(--rule); overflow: hidden; }
+.svc__bar span {
+  display: block; height: 100%; width: 100%; background: var(--navy);
+  transform: scaleX(.2); transform-origin: 0 50%; transition: transform .3s cubic-bezier(.2,.7,.3,1);
+}
 .svc__panels { display: grid; }
 .svc__panel { grid-area: 1 / 1; visibility: hidden; opacity: 0; transform: translateY(6px); transition: opacity .3s ease, transform .3s ease; }
 .svc__panel[data-active] { visibility: visible; opacity: 1; transform: none; }
@@ -392,6 +407,18 @@ a.tombstone:hover .tombstone__more svg { transform: translateX(3px); }
 .svc__list li { padding: 1rem 0; border-bottom: 1px solid var(--rule); }
 .svc__list b { display: block; font-weight: 500; font-size: .9375rem; color: var(--ink); }
 .svc__list span { display: block; margin-top: .25rem; font-size: .8125rem; color: var(--ink-3); line-height: 1.5; }
+
+@media (min-width: 1000px) and (prefers-reduced-motion: no-preference) {
+  .svc { padding-block: 0; }
+  html.svc-pin .svc__track { height: calc(100vh + 4 * 78vh); }
+  html.svc-pin .svc__stage {
+    position: sticky; top: var(--head-h);
+    min-height: calc(100vh - var(--head-h));
+    display: grid; align-content: center;
+    padding-block: clamp(3rem, 6vw, 5rem);
+  }
+  html.svc-pin .svc__stage .rail { position: static; }
+}
 
 /* ---------- key focus ---------- */
 .focus { display: grid; gap: clamp(1.5rem, 3vw, 2.5rem); align-items: center; }
@@ -424,17 +451,39 @@ a.tombstone:hover .tombstone__more svg { transform: translateX(3px); }
 .pull { margin: 1.75rem 0 0; padding-left: 1.5rem; border-left: 2px solid var(--navy); font-family: var(--f-display); font-style: italic; font-size: 1.0625rem; line-height: 1.5; color: var(--ink); }
 .pull footer { margin-top: .85rem; font: 400 .8125rem/1.4 var(--f-mono); font-style: normal; color: var(--ink-3); letter-spacing: .04em; }
 
-/* ---------- accolade ---------- */
-.quote { margin-top: 2rem; background: var(--navy-field); color: var(--on-navy); padding: clamp(1.75rem, 4vw, 3rem); }
-.quote .eyebrow { color: var(--on-navy-2); }
-.quote blockquote { margin: 1.5rem 0 0; font-family: var(--f-display); font-size: clamp(1.125rem, 1.9vw, 1.375rem); line-height: 1.5; max-width: 52ch; }
-.quote figcaption { margin-top: 1.75rem; font-size: .875rem; color: var(--on-navy-2); }
-.quote figcaption b { display: block; color: var(--on-navy); font-weight: 500; }
+/* ---------- accolade: full-bleed, but still inside the transactions story ---------- */
+.accolade {
+  margin: clamp(3.5rem, 7vw, 5.5rem) 0 0;
+  background: var(--navy-field); color: var(--on-navy);
+  padding-block: clamp(3rem, 7vw, 5rem);
+}
+.accolade__in { display: grid; gap: clamp(1.75rem, 4vw, 3.5rem); }
+@media (min-width: 900px) { .accolade__in { grid-template-columns: 4fr 8fr; align-items: start; } }
+.accolade .eyebrow { color: var(--on-navy-2); }
+.accolade blockquote {
+  margin: 0; font-family: var(--f-display);
+  font-size: clamp(1.1875rem, 2.1vw, 1.6rem); line-height: 1.45; max-width: 46ch;
+}
+.accolade figcaption { margin-top: 1.5rem; font-size: .875rem; color: var(--on-navy-2); line-height: 1.5; }
+.accolade figcaption b { display: block; color: var(--on-navy); font-weight: 500; font-size: 1rem; }
 
 /* ---------- approach ---------- */
 .approach { border-top: 1px solid var(--rule); }
-.approach li { padding: 1.5rem 0; border-bottom: 1px solid var(--rule); display: grid; gap: .4rem; transition: padding-left .3s cubic-bezier(.2,.7,.3,1); }
-@media (min-width: 720px) { .approach li { grid-template-columns: 5fr 7fr; gap: 2rem; align-items: baseline; } }
+.approach li {
+  padding: 1.5rem 0; border-bottom: 1px solid var(--rule);
+  display: grid; grid-template-columns: auto 1fr; gap: .4rem 1rem;
+  transition: padding-left .3s cubic-bezier(.2,.7,.3,1);
+}
+@media (min-width: 720px) { .approach li { grid-template-columns: auto 5fr 7fr; gap: 1.5rem; align-items: baseline; } }
+.approach__icon {
+  grid-row: 1 / span 2; display: grid; place-items: center;
+  width: 2.75rem; height: 2.75rem; flex: none;
+  border: 1px solid var(--rule-2); color: var(--navy-ink);
+  align-self: start; transition: border-color .25s ease, background .25s ease;
+}
+@media (min-width: 720px) { .approach__icon { grid-row: 1; align-self: center; } }
+.approach li:hover .approach__icon { border-color: var(--navy); background: color-mix(in srgb, var(--navy) 7%, transparent); }
+.approach__icon svg { width: 22px; height: 22px; }
 .approach li:hover { padding-left: .5rem; }
 .approach h3 { font-family: var(--f-display); font-size: 1.1875rem; }
 .approach p { font-size: .9375rem; color: var(--ink-3); line-height: 1.55; }
@@ -556,39 +605,18 @@ a.tombstone:hover .tombstone__more svg { transform: translateX(3px); }
 
   <!-- ===== Hero ===== -->
   <section class="wrap hero">
-    <div class="hero__grid">
-      <div>
-        <p class="eyebrow" data-reveal>Boutique M&amp;A &amp; Corporate Advisory &middot; Vadodara</p>
-        <h1 class="display h1" data-reveal>Institutional advisory, <em>at promoter scale.</em></h1>
-        <p class="lede hero__lede" data-reveal>We lead M&amp;A, financial structuring and growth-capital mandates end to end &mdash; from origination to close &mdash; for promoter-led businesses in pharmaceuticals, specialty fine chemicals and allied sectors.</p>
-        <div class="hero__cta" data-reveal>
-          <a class="btn btn--primary" href="#transactions">See our transactions <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-          <a class="btn btn--ghost" href="#contact">Start a conversation</a>
-        </div>
-      </div>
-
-      <a class="tombstone" href="#kronox" data-reveal aria-label="Read about the Kronox Lab Sciences and Indo Borax transaction">
-        <div class="tombstone__top">
-          <span class="tombstone__status"><span class="dot"></span> Signed</span>
-          <span class="tombstone__status num">20 Aug 2026</span>
-        </div>
-        <p class="eyebrow" style="margin-top:1.5rem">Change of control &mdash; listed to listed</p>
-        <div class="tombstone__party">
-          <h2 class="display h3">Kronox Lab Sciences Limited</h2>
-          <span class="tombstone__arrow" aria-label="64.26% transferred to"><i></i>64.26%<i></i><b></b></span>
-          <h2 class="display h3">Indo Borax &amp; Chemicals Limited</h2>
-        </div>
-        <p class="tombstone__role">MS Advisors acted as exclusive Strategic and M&amp;A Advisor to the promoters of Kronox Lab Sciences Limited, with CNK &amp; Associates LLP.</p>
-        <p class="tombstone__ticker num">NSE: KRONOX &middot; BSE: 544187 &nbsp;&rarr;&nbsp; NSE: INDOBORAX &middot; BSE: 524342</p>
-        <span class="tombstone__more">Read the mandate <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-      </a>
+    <p class="eyebrow" data-reveal>Boutique M&amp;A &amp; Corporate Advisory</p>
+    <h1 class="display h1" data-reveal>Institutional advisory, <em>at promoter scale.</em></h1>
+    <p class="lede hero__lede" data-reveal>We lead M&amp;A, financial structuring and growth-capital mandates end to end &mdash; from origination to close &mdash; for promoter-led businesses in pharmaceuticals, specialty fine chemicals and allied sectors.</p>
+    <div class="hero__cta" data-reveal>
+      <a class="btn btn--primary" href="#transactions">See our transactions <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="btn btn--ghost" href="#contact">Start a conversation</a>
     </div>
 
-    <div class="figures" style="margin-top:clamp(3rem,6vw,4.5rem)" data-reveal>
+    <div class="figures" data-reveal>
       <div class="figure"><p class="figure__n num">31</p><p class="figure__l">Years of advisory and leadership experience</p></div>
       <div class="figure"><p class="figure__n num">20</p><p class="figure__l">Of those years in leadership positions</p></div>
       <div class="figure"><p class="figure__n num">2</p><p class="figure__l">M&amp;A mandates advised since founding</p></div>
-      <div class="figure"><p class="figure__n num">4</p><p class="figure__l">Sectors under active mandate</p></div>
     </div>
   </section>
 
@@ -599,12 +627,6 @@ a.tombstone:hover .tombstone__more svg { transform: translateX(3px); }
         <p class="eyebrow">The firm</p>
         <h2 class="display h2">A one-stop practice for running a business well</h2>
         <p class="rail__note">Founded in 2025 by Mitanshu Shah, after 31 years in senior finance and leadership roles.</p>
-        <ul class="bullets bullets--plain">
-          <li><span class="bullets__item"><span class="bullets__mark"></span>Boutique, promoter-focused</span></li>
-          <li><span class="bullets__item"><span class="bullets__mark"></span>Every mandate led end to end</span></li>
-          <li><span class="bullets__item"><span class="bullets__mark"></span>Vadodara, Gujarat</span></li>
-          <li><span class="bullets__item"><span class="bullets__mark"></span>Two M&amp;A transactions closed</span></li>
-        </ul>
       </div>
 
       <div class="firm">
@@ -658,12 +680,16 @@ a.tombstone:hover .tombstone__more svg { transform: translateX(3px); }
   </section>
 
   <!-- ===== 2. What we are engaged to do ===== -->
-  <section class="wrap section" id="services">
-    <div class="spread">
+  <section class="section svc" id="services">
+    <div class="svc__track" id="svc-track">
+      <div class="svc__stage">
+        <div class="wrap spread">
       <div class="rail" data-reveal>
         <p class="eyebrow">Practice areas</p>
         <h2 class="display h2">What we are engaged to do</h2>
-        <p class="rail__note">Five practice areas, each led end to end. Select one to see what a mandate covers.</p>
+        <p class="rail__note">Five practice areas, each led end to end. Keep scrolling to move through them, or pick one.</p>
+        <p class="svc__count" aria-hidden="true"><span id="svc-index" class="num">01</span> / <span class="num">05</span></p>
+        <div class="svc__bar" aria-hidden="true"><span id="svc-bar"></span></div>
         <ul class="bullets" role="tablist" aria-label="Practice areas">
           <li><button class="bullets__item" id="tab-finance" role="tab" aria-selected="true" aria-controls="panel-finance" tabindex="0" data-svc="finance" type="button"><span class="bullets__mark"></span>Transformation &amp; Business Finance</button></li>
           <li><button class="bullets__item" id="tab-structuring" role="tab" aria-selected="false" aria-controls="panel-structuring" tabindex="-1" data-svc="structuring" type="button"><span class="bullets__mark"></span>Financial Structuring &amp; M&amp;A</button></li>
@@ -730,6 +756,8 @@ a.tombstone:hover .tombstone__more svg { transform: translateX(3px); }
             <li><b>Risk Mitigation</b><span>Identification, assessment and mitigation of financial risk.</span></li>
           </ul>
         </div>
+        </div>
+        </div>
       </div>
     </div>
   </section>
@@ -746,18 +774,12 @@ a.tombstone:hover .tombstone__more svg { transform: translateX(3px); }
   </div>
 
   <!-- ===== 3. Key focus & transactions ===== -->
-  <section class="wrap section" id="transactions">
-    <div class="spread">
+  <section class="section" id="transactions">
+    <div class="wrap spread">
       <div class="rail" data-reveal>
         <p class="eyebrow">Key focus</p>
         <h2 class="display h2">Transactions</h2>
         <p class="rail__note">Mandates concluded for promoters and boards, and the sectors we hold active mandates in.</p>
-        <ul class="bullets bullets--plain">
-          <li><span class="bullets__item"><span class="bullets__mark"></span>Pharmaceuticals</span></li>
-          <li><span class="bullets__item"><span class="bullets__mark"></span>Specialty fine chemicals</span></li>
-          <li><span class="bullets__item"><span class="bullets__mark"></span>Utilities</span></li>
-          <li><span class="bullets__item"><span class="bullets__mark"></span>Allied sectors</span></li>
-        </ul>
       </div>
 
       <div>
@@ -819,16 +841,21 @@ a.tombstone:hover .tombstone__more svg { transform: translateX(3px); }
           </div>
         </article>
 
-        <figure class="quote" data-reveal>
-          <p class="eyebrow">Accolade &middot; Maksons Fine Chem</p>
-          <blockquote>&ldquo;What stood out most was the speed and ease with which the entire process was navigated. A transaction of this nature, with its inherent complexities, was concluded in record time&hellip; His ability to deeply align with our perspective &mdash; understanding our priorities, our sensitivities, and our expectations &mdash; while simultaneously driving the transaction forward with clarity and conviction, was remarkable&hellip; We would not hesitate to recommend them, without reservation, to any promoter considering a transaction of significance.&rdquo;</blockquote>
-          <figcaption>
-            <b>Kumar Makadia</b>
-            Managing Director, Maksons Fine Chem Pvt Ltd
-          </figcaption>
-        </figure>
       </div>
     </div>
+
+    <figure class="accolade" data-reveal>
+      <div class="wrap accolade__in">
+        <div>
+          <p class="eyebrow">Accolades</p>
+          <figcaption>
+            <b>Kumar Makadia</b>
+            Managing Director,<br>Maksons Fine Chem Pvt Ltd
+          </figcaption>
+        </div>
+        <blockquote>&ldquo;What stood out most was the speed and ease with which the entire process was navigated. A transaction of this nature, with its inherent complexities, was concluded in record time&hellip; His ability to deeply align with our perspective &mdash; understanding our priorities, our sensitivities, and our expectations &mdash; while simultaneously driving the transaction forward with clarity and conviction, was remarkable&hellip; We would not hesitate to recommend them, without reservation, to any promoter considering a transaction of significance.&rdquo;</blockquote>
+      </div>
+    </figure>
   </section>
 
   <!-- ===== 4. Approach ===== -->
@@ -841,18 +868,22 @@ a.tombstone:hover .tombstone__more svg { transform: translateX(3px); }
       </div>
       <ul class="approach" data-reveal>
         <li>
+          <span class="approach__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="12" r="6"/><circle cx="15" cy="12" r="6"/></svg></span>
           <h3>Hands-on partnership</h3>
           <p>We roll up our sleeves and work alongside your team, from the first structuring note to the closing table.</p>
         </li>
         <li>
+          <span class="approach__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18"/><path d="M6.5 20V12"/><path d="M12 20V7"/><path d="M17.5 20v-5.5"/></svg></span>
           <h3>Decisions on reliable data</h3>
           <p>We bring the discipline of making critical calls on numbers that hold up under diligence.</p>
         </li>
         <li>
+          <span class="approach__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6l7-3z"/></svg></span>
           <h3>Solutions that endure</h3>
           <p>What we build has to still work two years after the mandate closes, not just on signing day.</p>
         </li>
         <li>
+          <span class="approach__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6"/><path d="M15.5 15.5L21 21"/><path d="M11 8v3.5"/><path d="M11 14h.01"/></svg></span>
           <h3>Risk found early</h3>
           <p>We identify exposure and build the frameworks to contain it before it reaches the board.</p>
         </li>
@@ -980,6 +1011,7 @@ a.tombstone:hover .tombstone__more svg { transform: translateX(3px); }
       masthead.classList.toggle('is-stuck', y > 8);
       var max = document.documentElement.scrollHeight - window.innerHeight;
       progress.style.transform = 'scaleX(' + (max > 0 ? Math.min(y / max, 1) : 0) + ')';
+      trackScroll();
       markCurrent();
       ticking = false;
     });
@@ -988,19 +1020,59 @@ a.tombstone:hover .tombstone__more svg { transform: translateX(3px); }
   /* ---- practice-area bullets (WAI-ARIA tabs pattern) ---- */
   var tabs = Array.prototype.slice.call(document.querySelectorAll('.bullets__item[role="tab"]'));
   var panels = Array.prototype.slice.call(document.querySelectorAll('.svc__panel'));
-  function select(tab) {
-    tabs.forEach(function (t) {
-      var on = t === tab;
+  var svcIndex = document.getElementById('svc-index');
+  var track = document.getElementById('svc-track');
+  var svcBar = document.getElementById('svc-bar');
+  var current = 0;
+
+  function select(i) {
+    if (i === current) return;
+    current = i;
+    tabs.forEach(function (t, n) {
+      var on = n === i;
       t.setAttribute('aria-selected', String(on));
       t.setAttribute('tabindex', on ? '0' : '-1');
     });
-    panels.forEach(function (p) {
-      if (p.id === 'panel-' + tab.dataset.svc) p.setAttribute('data-active', '');
+    panels.forEach(function (p, n) {
+      if (n === i) p.setAttribute('data-active', '');
       else p.removeAttribute('data-active');
     });
+    if (svcIndex) svcIndex.textContent = ('0' + (i + 1)).slice(-2);
+    if (svcBar) svcBar.style.transform = 'scaleX(' + ((i + 1) / tabs.length) + ')';
   }
+
+  /* Pin the section and step through the panels as its track scrolls past.
+     Only where there is room for it and the visitor has not asked for less
+     motion; otherwise the bullets stay an ordinary tab list. */
+  var pinQuery = window.matchMedia('(min-width: 1000px) and (prefers-reduced-motion: no-preference)');
+  function pinned() { return pinQuery.matches; }
+  function syncPin() { root.classList.toggle('svc-pin', pinned()); }
+  pinQuery.addEventListener('change', function () { syncPin(); onScroll(); });
+  syncPin();
+
+  function scrollProgress() {
+    var stage = track.firstElementChild;
+    var travel = track.offsetHeight - stage.offsetHeight;
+    if (travel <= 0) return null;
+    return Math.min(Math.max((window.scrollY - track.offsetTop) / travel, 0), 1);
+  }
+  function trackScroll() {
+    if (!pinned()) return;
+    var p = scrollProgress();
+    if (p === null) return;
+    select(Math.min(tabs.length - 1, Math.floor(p * tabs.length)));
+  }
+
   tabs.forEach(function (tab, i) {
-    tab.addEventListener('click', function () { select(tab); });
+    tab.addEventListener('click', function () {
+      if (pinned()) {
+        var stage = track.firstElementChild;
+        var travel = track.offsetHeight - stage.offsetHeight;
+        // land in the middle of that panel's band so the state is stable
+        window.scrollTo({ top: track.offsetTop + travel * ((i + 0.5) / tabs.length), behavior: 'smooth' });
+      }
+      select(i);
+    });
     tab.addEventListener('keydown', function (e) {
       var step = { ArrowUp: -1, ArrowLeft: -1, ArrowDown: 1, ArrowRight: 1 };
       var next = null;
@@ -1009,7 +1081,7 @@ a.tombstone:hover .tombstone__more svg { transform: translateX(3px); }
       else if (e.key === 'End') next = tabs.length - 1;
       if (next === null) return;
       e.preventDefault();
-      select(tabs[next]);
+      select(next);
       tabs[next].focus();
     });
   });
