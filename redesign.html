@@ -522,10 +522,29 @@ a.tombstone:hover .tombstone__more svg { transform: translateX(3px); }
 /* ---------- clients ---------- */
 .clients { display: grid; border-top: 1px solid var(--rule); }
 @media (min-width: 640px) { .clients { grid-template-columns: 1fr 1fr; column-gap: 2.5rem; } }
-.clients li { padding: 1.5rem 0; border-bottom: 1px solid var(--rule); }
-.clients p { margin-top: .7rem; font-size: .875rem; color: var(--ink-3); line-height: 1.55; }
-.clients b { display: block; font-family: var(--f-display); font-size: 1.25rem; font-weight: 500; letter-spacing: -.01em; color: var(--ink); }
-.clients span { display: block; margin-top: .35rem; font-family: var(--f-mono); font-size: .6875rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); }
+.clients li { padding: 1.75rem 0; border-bottom: 1px solid var(--rule); }
+/* A client may or may not have a logo. Without one the name is set as the
+   mark; with one, the logo sits on a light plate (so any dark logo survives
+   the dark theme) and the name drops to a caption. Either way the rows keep
+   the same rhythm. */
+.clients__mark { display: none; }
+.clients .has-logo .clients__mark {
+  display: grid; place-items: center; height: 4.5rem; margin-bottom: 1rem;
+  padding: .75rem 1rem; background: var(--portrait-ground); border: 1px solid var(--rule);
+}
+.clients .has-logo .clients__mark img { max-height: 100%; width: auto; }
+/* When any client in the list has a logo, the others reserve the same
+   height so every name still sits on one line. */
+.clients:has(.has-logo) li:not(.has-logo) .clients__mark { display: block; height: 4.5rem; margin-bottom: 1rem; }
+.clients b {
+  display: block; font-family: var(--f-display); font-size: 1.3rem;
+  font-weight: 500; letter-spacing: -.01em; color: var(--ink); line-height: 1.25;
+}
+.clients .has-logo b { font-family: var(--f-sans); font-size: .9375rem; font-weight: 500; }
+.clients__role {
+  display: block; margin-top: .5rem; font-family: var(--f-mono); font-size: .6875rem;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3);
+}
 .alongside { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--rule); }
 .alongside ul { margin-top: .85rem; display: flex; flex-wrap: wrap; gap: .5rem 2rem; }
 .alongside li { font-size: .9375rem; color: var(--ink-2); }
@@ -901,18 +920,23 @@ a.tombstone:hover .tombstone__more svg { transform: translateX(3px); }
       </div>
       <div>
         <ul class="clients" data-reveal>
+          <!-- Add a logo by dropping the file in assets/clients/ and giving the
+               <li> the has-logo class:
+               <li class="has-logo">
+                 <span class="clients__mark"><img src="assets/clients/kronox.svg" alt="Kronox Lab Sciences Limited"></span>
+                 ...
+               Without it the name itself is the mark, and the row still lines up. -->
           <li>
+            <span class="clients__mark"></span>
             <b>Kronox Lab Sciences Limited</b>
-            <span>Promoters &middot; change of control &middot; 2026</span>
-            <p>Divestment of a 64.26% controlling stake in a listed specialty fine chemicals manufacturer, with a 9.95% stake retained.</p>
+            <span class="clients__role">Promoters &middot; change of control &middot; 2026</span>
           </li>
           <li>
+            <span class="clients__mark"></span>
             <b>Maksons Fine Chem Pvt Ltd</b>
-            <span>Promoters &middot; sell-side M&amp;A</span>
-            <p>Sale to a large India-based, PE-backed API platform, led from origination to closure.</p>
+            <span class="clients__role">Promoters &middot; sell-side M&amp;A</span>
           </li>
         </ul>
-        <p class="small" style="margin-top:1.5rem;max-width:60ch" data-reveal>Further mandates across pharmaceuticals, specialty fine chemicals, utilities and allied sectors are active and held in confidence.</p>
         <div class="alongside" data-reveal>
           <p class="eyebrow">Worked alongside</p>
           <ul>
